@@ -1,0 +1,1779 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Latihan JAWARA Semester 2</title>
+  <style>
+    :root {
+      --ink: #18202f;
+      --muted: #647086;
+      --line: #d9e0ec;
+      --paper: #ffffff;
+      --soft: #f4f7fb;
+      --blue: #2563eb;
+      --teal: #0f766e;
+      --gold: #b7791f;
+      --rose: #be123c;
+      --ok: #15803d;
+      --bad: #b91c1c;
+      --shadow: 0 14px 34px rgba(24, 32, 47, .10);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 15% 0%, rgba(37, 99, 235, .12), transparent 26rem),
+        radial-gradient(circle at 85% 5%, rgba(15, 118, 110, .14), transparent 24rem),
+        linear-gradient(180deg, #f8fbff 0%, #eef4f7 100%);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    button {
+      min-height: 42px;
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 340px minmax(0, 1fr);
+      transition: grid-template-columns .2s ease;
+    }
+
+    .app.sidebar-hidden {
+      grid-template-columns: 0 minmax(0, 1fr);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      padding: 20px;
+      background: rgba(255,255,255,.94);
+      border-right: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+      transition: opacity .18s ease, transform .18s ease;
+    }
+
+    .app.sidebar-hidden .sidebar {
+      opacity: 0;
+      transform: translateX(-12px);
+      pointer-events: none;
+      padding-left: 0;
+      padding-right: 0;
+      overflow: hidden;
+    }
+
+    .brand {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .mark {
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      color: white;
+      background: linear-gradient(135deg, var(--blue), var(--teal));
+      box-shadow: var(--shadow);
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 3px;
+      font-size: 20px;
+      line-height: 1.15;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .panel {
+      margin: 14px 0;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+    }
+
+    .collapsible-panel {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .panel-toggle {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 13px 14px;
+      color: var(--ink);
+      background: white;
+      border-radius: 8px;
+      text-align: left;
+    }
+
+    .toggle-icon {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--muted);
+      flex: 0 0 auto;
+    }
+
+    .quick-panel-body {
+      display: none;
+      padding: 0 14px 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    .quick-panel-body.show {
+      display: block;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 12px;
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .input, .select {
+      width: 100%;
+      min-height: 42px;
+      padding: 10px 11px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .input:focus, .select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .stat {
+      padding: 12px;
+      border-radius: 8px;
+      background: var(--soft);
+      border: 1px solid var(--line);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 22px;
+    }
+
+    .auth-row {
+      display: grid;
+      gap: 8px;
+    }
+
+    .user-chip {
+      display: none;
+      grid-template-columns: 34px 1fr;
+      gap: 9px;
+      align-items: center;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f8fafc;
+    }
+
+    .user-chip.show {
+      display: grid;
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      color: white;
+      background: var(--teal);
+      font-weight: 900;
+      overflow: hidden;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .sync-status {
+      min-height: 18px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .subject-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .subject-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      text-align: left;
+      background: #f7fafc;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .subject-btn.active {
+      color: white;
+      background: var(--blue);
+      border-color: var(--blue);
+    }
+
+    .subject-chevron {
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border-radius: 999px;
+      background: rgba(255,255,255,.68);
+      color: inherit;
+      font-weight: 900;
+    }
+
+    .topic-submenu {
+      display: grid;
+      gap: 6px;
+      margin: -2px 0 8px 12px;
+      padding-left: 10px;
+      border-left: 2px solid var(--line);
+    }
+
+    .topic-submenu-btn {
+      width: 100%;
+      min-height: 36px;
+      padding: 8px 9px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--ink);
+      text-align: left;
+      font-size: 13px;
+      line-height: 1.25;
+      font-weight: 700;
+    }
+
+    .topic-submenu-btn:hover {
+      background: #f8fafc;
+      border-color: var(--line);
+    }
+
+    .topic-submenu-btn.active {
+      color: var(--blue);
+      background: #eff6ff;
+      border-color: #bfdbfe;
+    }
+
+    main {
+      min-width: 0;
+      padding: 18px;
+    }
+
+    .side-toggle {
+      position: fixed;
+      left: 326px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 20;
+      width: 34px;
+      height: 62px;
+      min-width: 0;
+      padding: 0;
+      color: var(--ink);
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      font-size: 22px;
+      line-height: 1;
+      transition: left .2s ease;
+    }
+
+    .app.sidebar-hidden .side-toggle {
+      left: 12px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin: 0 auto 18px;
+      max-width: 1320px;
+    }
+
+    .title h2 {
+      margin-bottom: 5px;
+      font-size: clamp(28px, 4vw, 48px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      padding: 10px 13px;
+      color: white;
+      background: var(--blue);
+    }
+
+    .btn.secondary {
+      color: var(--ink);
+      background: white;
+      border: 1px solid var(--line);
+    }
+
+    .btn.good { background: var(--teal); }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      max-width: 1320px;
+      margin: 0 auto;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255,255,255,.94);
+      box-shadow: var(--shadow);
+    }
+
+    .card-head {
+      padding: 14px 16px 0;
+    }
+
+    .card-body {
+      padding: 16px;
+    }
+
+    .topic-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 13px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #eef2ff;
+      color: #3730a3;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .pill.teal { background: #ccfbf1; color: #115e59; }
+    .pill.gold { background: #fef3c7; color: #92400e; }
+
+    .topic-title {
+      margin-bottom: 8px;
+      font-size: 24px;
+      line-height: 1.18;
+    }
+
+    .points {
+      display: flex;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      line-height: 1.45;
+      flex-wrap: wrap;
+    }
+
+    .points li {
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #f8fafc;
+      font-size: 13px;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      padding: 10px;
+      border-bottom: 1px solid var(--line);
+      background: #f8fafc;
+      border-radius: 8px 8px 0 0;
+    }
+
+    .tab {
+      color: var(--muted);
+      background: transparent;
+    }
+
+    .tab.active {
+      color: white;
+      background: var(--teal);
+    }
+
+    .question-box {
+      display: grid;
+      gap: 14px;
+      min-height: 0;
+      align-content: start;
+    }
+
+    .question-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .question-item {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+    }
+
+    .question-count {
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .question {
+      font-size: clamp(24px, 3vw, 38px);
+      font-weight: 900;
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    .options {
+      display: grid;
+      gap: 12px;
+    }
+
+    .option {
+      min-height: 58px;
+      padding: 14px 16px;
+      text-align: left;
+      color: var(--ink);
+      background: white;
+      border: 1px solid var(--line);
+      font-size: clamp(17px, 1.7vw, 22px);
+      line-height: 1.25;
+    }
+
+    .option:hover {
+      border-color: var(--blue);
+      background: #f8fbff;
+    }
+
+    .option.correct {
+      color: white;
+      background: var(--ok);
+      border-color: var(--ok);
+    }
+
+    .option.wrong {
+      color: white;
+      background: var(--bad);
+      border-color: var(--bad);
+    }
+
+    .feedback {
+      min-height: 56px;
+      padding: 14px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--soft);
+      line-height: 1.4;
+      font-size: 17px;
+    }
+
+    .feedback.ok {
+      color: #14532d;
+      background: #dcfce7;
+      border-color: #86efac;
+    }
+
+    .feedback.bad {
+      color: #7f1d1d;
+      background: #fee2e2;
+      border-color: #fecaca;
+    }
+
+    .practice-actions {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .progress {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e2e8f0;
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--teal), var(--blue));
+    }
+
+    .worksheet {
+      display: none;
+    }
+
+    .worksheet.show {
+      display: block;
+    }
+
+    .worksheet h3 {
+      margin: 16px 0 8px;
+    }
+
+    .worksheet ol {
+      padding-left: 22px;
+      line-height: 1.55;
+    }
+
+    .blank {
+      display: block;
+      height: 26px;
+      border-bottom: 1px solid #333;
+      margin: 8px 0 14px;
+    }
+
+    .essay-area {
+      width: 100%;
+      min-height: 180px;
+      padding: 16px;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      resize: vertical;
+      outline: none;
+      font-size: clamp(17px, 1.7vw, 22px);
+      line-height: 1.5;
+      background: white;
+      color: var(--ink);
+    }
+
+    .essay-area:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 4px rgba(15, 118, 110, .12);
+    }
+
+    .mode-note {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .empty {
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      background: rgba(255,255,255,.7);
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: none;
+      place-items: center;
+      padding: 20px;
+      background: rgba(15, 23, 42, .42);
+    }
+
+    .modal-backdrop.show {
+      display: grid;
+    }
+
+    .modal {
+      width: min(460px, 100%);
+      padding: 18px;
+      border-radius: 8px;
+      background: white;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .modal h3 {
+      margin-bottom: 8px;
+      font-size: 22px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 980px) {
+      .app { grid-template-columns: 1fr; }
+      .app.sidebar-hidden { grid-template-columns: 1fr; }
+      .sidebar {
+        position: relative;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .app.sidebar-hidden .sidebar {
+        display: none;
+      }
+      .workspace { grid-template-columns: 1fr; }
+      .topbar { display: grid; }
+      .actions { justify-content: flex-start; }
+      .side-toggle {
+        left: auto;
+        right: 14px;
+        top: auto;
+        bottom: 14px;
+        transform: none;
+        width: 54px;
+        height: 44px;
+      }
+      .app.sidebar-hidden .side-toggle {
+        left: auto;
+      }
+    }
+
+    @media (max-width: 620px) {
+      main, .sidebar { padding: 16px; }
+      .tabs { grid-template-columns: 1fr; }
+      .topic-title { font-size: 21px; }
+      .question { font-size: 24px; }
+      .option { min-height: 56px; font-size: 17px; }
+      .question-box { min-height: 0; }
+      .stats { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media print {
+      body { background: white; }
+      .sidebar, .side-toggle, .topbar, .tabs, .practice-actions, .feedback, .options, .question-box { display: none !important; }
+      .app, .workspace { display: block; }
+      main { padding: 0; }
+      .card { border: 0; box-shadow: none; }
+      .worksheet { display: block !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="mark">J2</div>
+        <div>
+          <h1>Latihan JAWARA Semester 2</h1>
+          <div class="small">Bank latihan interaktif untuk siswa kelas 1.</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="field">
+          <label class="label" for="studentName">Nama siswa</label>
+          <input class="input" id="studentName" placeholder="Tulis nama">
+        </div>
+        <div class="field">
+          <label class="label" for="search">Cari materi</label>
+          <input class="input" id="search" placeholder="Contoh: uang, puasa, bunyi">
+        </div>
+        <div class="field">
+          <label class="label" for="subjectFilter">Mapel</label>
+          <select class="select" id="subjectFilter"></select>
+        </div>
+      </div>
+
+      <div class="panel stats">
+        <div class="stat"><strong id="topicTotal">0</strong><span class="small">Topik</span></div>
+        <div class="stat"><strong id="scoreTotal">0%</strong><span class="small">Skor</span></div>
+      </div>
+
+      <div class="panel auth-row">
+        <div class="label">Akun siswa</div>
+        <div class="user-chip" id="userChip">
+          <div class="avatar" id="userAvatar">?</div>
+          <div>
+            <div id="userName" style="font-weight:900">Belum login</div>
+            <div class="small" id="userEmail">Login Google untuk lanjut di perangkat lain.</div>
+          </div>
+        </div>
+        <button class="btn" id="loginBtn">Login Google</button>
+        <button class="btn secondary" id="logoutBtn" style="display:none">Logout</button>
+        <div class="sync-status" id="syncStatus">Firebase belum dikonfigurasi.</div>
+      </div>
+
+      <div class="panel collapsible-panel">
+        <button class="panel-toggle" id="quickToggle" aria-expanded="false">
+          <span>
+            <span class="label">Pilih cepat</span><br>
+            <span class="small">Mapel dan topik</span>
+          </span>
+          <span class="toggle-icon" id="quickToggleIcon">+</span>
+        </button>
+        <div class="quick-panel-body" id="quickPanel">
+          <div class="subject-list" id="subjectList"></div>
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      <button class="side-toggle" id="sideToggle" aria-label="Sembunyikan menu">&lt;</button>
+      <section class="topbar">
+        <div class="title">
+          <h2>Latihan Soal</h2>
+          <p class="small">Pilih topik, kerjakan pilihan ganda, lalu lanjut esai.</p>
+        </div>
+        <div class="actions">
+          <button class="btn secondary" id="shuffleBtn">Acak Topik</button>
+          <button class="btn secondary" id="resetTopicBtn">Reset Topik Ini</button>
+          <button class="btn secondary" id="resetBtn">Reset Semua</button>
+          <button class="btn good" id="printBtn">Print Soal</button>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <article class="card" id="materialCard"></article>
+        <article class="card">
+          <div class="tabs">
+            <button class="tab active" data-tab="quiz">Pilihan Ganda</button>
+            <button class="tab" data-tab="essay">Esai</button>
+          </div>
+          <div class="card-body" id="practiceCard"></div>
+        </article>
+      </section>
+
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="modal">
+      <h3 id="confirmTitle">Pindah topik?</h3>
+      <p class="small" id="confirmText">Latihan akan diganti ke topik yang dipilih.</p>
+      <div class="modal-actions">
+        <button class="btn secondary" id="cancelTopicBtn">Batal</button>
+        <button class="btn" id="confirmTopicBtn">Ya, pindah</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TOPICS = [
+      {
+        subject: "Bahasa",
+        title: "Materi Bahasa",
+        source: "Bahasa/Materi Bahasa.pdf",
+        points: ["Mengenal kosakata benda dan kegiatan sehari-hari.", "Menyusun kalimat sederhana dengan huruf kapital dan tanda titik.", "Menceritakan pengalaman dengan runtut."],
+        questions: [
+          ["Kalimat yang benar adalah ...", ["Ani membaca buku.", "ani membaca buku", "Ani membaca buku"], 0, "Kalimat diawali huruf kapital dan diakhiri tanda titik."],
+          ["Kata yang termasuk benda adalah ...", ["Berlari", "Pensil", "Cepat"], 1, "Pensil adalah nama benda."],
+          ["Saat bercerita, kita memakai suara yang ...", ["jelas", "marah", "sangat pelan"], 0, "Suara jelas membantu teman memahami cerita."],
+          ["Tanda baca di akhir kalimat berita adalah ...", ["koma", "titik", "tanya"], 1, "Kalimat berita diakhiri tanda titik."],
+          ["Kalimat tanya biasanya diawali kata ...", ["apa", "meja", "hijau"], 0, "Apa dapat digunakan untuk bertanya."]
+        ],
+        worksheet: ["Tuliskan 5 nama benda di kelas.", "Buat 3 kalimat sederhana tentang rumah.", "Ceritakan pengalaman berbagi dengan teman."]
+      },
+      {
+        subject: "Math",
+        title: "Membilang Angka 51 - 100",
+        source: "Math/1. MEMBILANG ANGKA 51 - 100.pptx",
+        points: ["Membaca lambang bilangan 51 sampai 100.", "Mengurutkan bilangan dari kecil ke besar.", "Membandingkan bilangan dengan lebih besar dan lebih kecil."],
+        questions: [
+          ["Bilangan setelah 68 adalah ...", ["67", "69", "70"], 1, "Setelah 68 adalah 69."],
+          ["Bilangan sebelum 90 adalah ...", ["89", "91", "99"], 0, "Satu angka sebelum 90 adalah 89."],
+          ["Urutan yang benar dari kecil ke besar adalah ...", ["72, 75, 78", "78, 75, 72", "75, 72, 78"], 0, "72 lebih kecil dari 75, dan 75 lebih kecil dari 78."],
+          ["Angka 84 dibaca ...", ["delapan puluh empat", "empat puluh delapan", "delapan empat"], 0, "84 dibaca delapan puluh empat."],
+          ["Bilangan yang paling besar adalah ...", ["56", "65", "59"], 1, "65 lebih besar dari 56 dan 59."]
+        ],
+        worksheet: ["Lengkapi bilangan 51 sampai 60.", "Tuliskan 5 bilangan yang lebih besar dari 80.", "Urutkan 92, 75, 88, 61 dari kecil ke besar."]
+      },
+      {
+        subject: "Math",
+        title: "Penjumlahan dan Pengurangan",
+        source: "Math/2. PENJUMLAHAN DAN PENGURANGAN.pptx",
+        points: ["Menjumlahkan bilangan dua angka sederhana.", "Mengurangkan bilangan dengan cara bertahap.", "Menggunakan cerita sehari-hari untuk berhitung."],
+        questions: [
+          ["35 + 12 = ...", ["47", "37", "57"], 0, "35 tambah 12 sama dengan 47."],
+          ["70 - 20 = ...", ["40", "50", "60"], 1, "70 dikurangi 20 sama dengan 50."],
+          ["Ibu punya 24 apel. Diberi lagi 5 apel. Jumlah apel ibu ...", ["19", "29", "35"], 1, "24 + 5 = 29."],
+          ["46 - 6 = ...", ["40", "41", "52"], 0, "46 dikurangi 6 sama dengan 40."],
+          ["Operasi untuk mencari sisa adalah ...", ["penjumlahan", "pengurangan", "perkalian"], 1, "Sisa dicari dengan pengurangan."]
+        ],
+        worksheet: ["Hitung 28 + 11.", "Hitung 64 - 30.", "Buat satu soal cerita penjumlahan."]
+      },
+      {
+        subject: "Math",
+        title: "Mengenal Uang",
+        source: "Math/3. Mengenal Uang.pdf",
+        points: ["Mengenal nilai uang rupiah.", "Membandingkan harga barang sederhana.", "Memilih uang yang cukup untuk membeli sesuatu."],
+        questions: [
+          ["Uang Rp1.000 lebih besar dari ...", ["Rp500", "Rp2.000", "Rp5.000"], 0, "Rp1.000 lebih besar dari Rp500."],
+          ["Jika harga pensil Rp2.000, uang yang cukup adalah ...", ["Rp1.000", "Rp2.000", "Rp500"], 1, "Rp2.000 pas untuk membeli pensil Rp2.000."],
+          ["Kembalian didapat saat uang kita ... harga barang.", ["lebih banyak dari", "lebih sedikit dari", "sama sekali tidak ada"], 0, "Jika uang lebih banyak dari harga, ada kembalian."],
+          ["Dua uang Rp500 nilainya sama dengan ...", ["Rp1.000", "Rp2.000", "Rp5.000"], 0, "500 + 500 = 1.000."],
+          ["Sikap baik saat memakai uang adalah ...", ["boros", "hemat", "membuang uang"], 1, "Hemat adalah sikap baik."]
+        ],
+        worksheet: ["Gambarkan uang Rp1.000.", "Hitung 500 + 500.", "Tuliskan contoh barang yang bisa dibeli di kantin."]
+      },
+      {
+        subject: "Math",
+        title: "Belajar Bangun Ruang",
+        source: "Math/4. Belajar Bangun Ruang.pdf",
+        points: ["Mengenal kubus, balok, bola, tabung, dan kerucut.", "Mencocokkan benda sekitar dengan bentuk bangun ruang.", "Mengamati sisi lengkung dan sisi datar."],
+        questions: [
+          ["Bola memiliki bentuk seperti ...", ["kelereng", "lemari", "kaleng"], 0, "Kelereng berbentuk bola."],
+          ["Kotak kado biasanya berbentuk ...", ["kubus", "bola", "kerucut"], 0, "Kotak kado sering berbentuk kubus."],
+          ["Kaleng susu mirip bangun ruang ...", ["tabung", "balok", "bola"], 0, "Kaleng berbentuk tabung."],
+          ["Benda yang mirip kerucut adalah ...", ["topi ulang tahun", "buku", "papan tulis"], 0, "Topi ulang tahun berbentuk kerucut."],
+          ["Balok memiliki sisi berbentuk ...", ["persegi panjang", "lingkaran", "segitiga saja"], 0, "Balok memiliki sisi persegi panjang."]
+        ],
+        worksheet: ["Sebutkan 3 benda berbentuk balok.", "Gambar satu benda berbentuk tabung.", "Kelompokkan benda: bola, kotak, kaleng."]
+      },
+      {
+        subject: "Math",
+        title: "Data dan Diagram",
+        source: "Math/5. Data dan Diagram.pdf",
+        points: ["Mengumpulkan data sederhana.", "Membaca tabel dan diagram gambar.", "Menjawab pertanyaan dari data."],
+        questions: [
+          ["Data dapat dikumpulkan dengan cara ...", ["bertanya", "menebak saja", "tidur"], 0, "Bertanya adalah cara mengumpulkan data."],
+          ["Diagram membantu kita melihat data dengan ...", ["lebih jelas", "lebih sulit", "tidak rapi"], 0, "Diagram membuat data lebih mudah dibaca."],
+          ["Jika gambar apel ada 5 dan pisang ada 3, yang lebih banyak adalah ...", ["apel", "pisang", "sama"], 0, "5 lebih banyak dari 3."],
+          ["Tabel berisi ...", ["data", "lagu", "warna saja"], 0, "Tabel digunakan untuk menulis data."],
+          ["Pertanyaan yang cocok untuk data kesukaan buah adalah ...", ["Buah apa yang kamu suka?", "Kamu tidur di mana?", "Berapa tinggi gedung?"], 0, "Pertanyaan itu sesuai dengan data buah kesukaan."]
+        ],
+        worksheet: ["Tanya 5 teman tentang buah kesukaan.", "Buat tabel sederhana dari jawaban teman.", "Tuliskan buah yang paling banyak dipilih."]
+      },
+      {
+        subject: "Math",
+        title: "Satuan Tidak Baku",
+        source: "Math/6. SATUAN TIDAK BAKU (Jengkal dan Langkah).pdf",
+        points: ["Mengukur dengan jengkal dan langkah.", "Membandingkan panjang benda sekitar.", "Memahami hasil ukuran tidak baku bisa berbeda."],
+        questions: [
+          ["Jengkal digunakan untuk mengukur ...", ["panjang", "rasa", "suara"], 0, "Jengkal dapat mengukur panjang benda."],
+          ["Langkah cocok untuk mengukur ...", ["jarak meja ke pintu", "berat tas", "warna buku"], 0, "Jarak dapat diukur dengan langkah."],
+          ["Hasil jengkal teman bisa berbeda karena ...", ["ukuran tangan berbeda", "warna baju berbeda", "nama berbeda"], 0, "Panjang tangan setiap orang tidak selalu sama."],
+          ["Alat ukur tidak baku adalah ...", ["jengkal", "penggaris", "meteran"], 0, "Jengkal adalah satuan tidak baku."],
+          ["Benda yang lebih panjang membutuhkan jengkal ...", ["lebih banyak", "lebih sedikit", "nol"], 0, "Semakin panjang benda, semakin banyak jengkal."]
+        ],
+        worksheet: ["Ukur meja dengan jengkal.", "Ukur jarak kursi ke pintu dengan langkah.", "Bandingkan hasilmu dengan teman."]
+      },
+      {
+        subject: "Religi",
+        title: "Review Religi",
+        source: "Religi/REVIEW RELIGI.pptx",
+        points: ["Mengulang adab baik sehari-hari.", "Mengenal ibadah dan doa sederhana.", "Meneladani sikap jujur, peduli, dan bersyukur."],
+        questions: [
+          ["Sebelum makan kita membaca ...", ["doa", "teriakan", "cerita"], 0, "Membaca doa sebelum makan adalah adab baik."],
+          ["Sikap yang disukai Allah adalah ...", ["jujur", "berbohong", "mengejek"], 0, "Jujur adalah perilaku terpuji."],
+          ["Saat bertemu teman, kita dapat mengucapkan ...", ["salam", "marah", "diam terus"], 0, "Salam adalah ucapan baik."],
+          ["Bersyukur berarti ...", ["berterima kasih kepada Allah", "mengeluh terus", "membuang makanan"], 0, "Bersyukur adalah berterima kasih."],
+          ["Menjaga ciptaan Allah dapat dilakukan dengan ...", ["merawat lingkungan", "membuang sampah sembarangan", "merusak tanaman"], 0, "Merawat lingkungan adalah sikap baik."]
+        ],
+        worksheet: ["Tuliskan 3 adab sebelum makan.", "Sebutkan contoh perilaku jujur.", "Gambar kegiatan menjaga ciptaan Allah."]
+      },
+      {
+        subject: "Science",
+        title: "Benda dan Perubahan Wujudnya",
+        source: "Science/1. Benda dan Perubahan Wujudnya.pptx",
+        points: ["Mengenal benda padat, cair, dan gas.", "Mengamati perubahan wujud seperti mencair dan membeku.", "Menyebutkan contoh perubahan wujud di rumah."],
+        questions: [
+          ["Es batu jika dipanaskan akan ...", ["mencair", "membeku", "menghilang jadi batu"], 0, "Es berubah menjadi air, disebut mencair."],
+          ["Air termasuk benda ...", ["cair", "padat", "keras"], 0, "Air adalah benda cair."],
+          ["Batu termasuk benda ...", ["padat", "cair", "gas"], 0, "Batu memiliki bentuk tetap."],
+          ["Uap air termasuk benda ...", ["gas", "padat", "buku"], 0, "Uap air adalah gas."],
+          ["Air dimasukkan freezer dapat ...", ["membeku", "mencair", "berlari"], 0, "Air menjadi es saat membeku."]
+        ],
+        worksheet: ["Sebutkan 3 benda padat.", "Sebutkan 2 benda cair.", "Ceritakan perubahan es menjadi air."]
+      },
+      {
+        subject: "Science",
+        title: "Bunyi dan Sifatnya",
+        source: "Science/2. Belajar Tentang Bunyi dan Sifatnya.pdf",
+        points: ["Bunyi berasal dari benda yang bergetar.", "Bunyi dapat keras, pelan, tinggi, atau rendah.", "Telinga digunakan untuk mendengar bunyi."],
+        questions: [
+          ["Alat tubuh untuk mendengar adalah ...", ["telinga", "mata", "kaki"], 0, "Telinga digunakan untuk mendengar."],
+          ["Bunyi berasal dari benda yang ...", ["bergetar", "tidur", "diam saja"], 0, "Getaran menghasilkan bunyi."],
+          ["Suara bisikan biasanya ...", ["pelan", "sangat keras", "berwarna"], 0, "Bisikan terdengar pelan."],
+          ["Contoh sumber bunyi adalah ...", ["lonceng", "batu diam", "kertas kosong"], 0, "Lonceng dapat menghasilkan bunyi."],
+          ["Saat suara terlalu keras, kita sebaiknya ...", ["menjaga telinga", "menambah keras", "berteriak"], 0, "Telinga perlu dijaga dari suara terlalu keras."]
+        ],
+        worksheet: ["Sebutkan 3 sumber bunyi.", "Praktikkan bunyi keras dan pelan.", "Tuliskan cara menjaga telinga."]
+      },
+      {
+        subject: "Science",
+        title: "Aku Bangga Mampu Berpuasa",
+        source: "Science/3. Aku Bangga Mampu Berpuasa.pptx",
+        points: ["Mengenal kebiasaan sehat saat berpuasa.", "Memilih makanan sahur dan berbuka yang baik.", "Melatih sabar dan disiplin."],
+        questions: [
+          ["Saat sahur, kita sebaiknya makan makanan yang ...", ["bergizi", "terlalu banyak permen", "kotor"], 0, "Makanan bergizi membantu tubuh kuat."],
+          ["Berpuasa melatih kita untuk ...", ["sabar", "marah", "berbohong"], 0, "Puasa melatih sabar."],
+          ["Saat berbuka, kita membaca ...", ["doa", "teriakan", "ejekan"], 0, "Berbuka diawali doa."],
+          ["Minuman yang baik untuk tubuh adalah ...", ["air putih", "cat", "air sabun"], 0, "Air putih baik untuk tubuh."],
+          ["Kegiatan baik saat Ramadhan adalah ...", ["berbagi", "bertengkar", "malas belajar"], 0, "Berbagi adalah kegiatan baik."]
+        ],
+        worksheet: ["Tuliskan menu sahur sehat.", "Sebutkan 2 sikap saat berpuasa.", "Ceritakan pengalaman berbuka puasa."]
+      },
+      {
+        subject: "Science",
+        title: "Lingkungan Sehat dan Tidak Sehat",
+        source: "Science/4.Lingkungan Sehat dan Tidak Sehat.pptx",
+        points: ["Membedakan lingkungan bersih dan kotor.", "Menjelaskan ciri lingkungan sehat.", "Membiasakan menjaga kebersihan."],
+        questions: [
+          ["Lingkungan sehat biasanya ...", ["bersih", "bau", "penuh sampah"], 0, "Lingkungan sehat bersih dan nyaman."],
+          ["Sampah sebaiknya dibuang ke ...", ["tempat sampah", "lantai", "sungai"], 0, "Sampah dibuang ke tempat sampah."],
+          ["Air kotor dapat menyebabkan ...", ["penyakit", "buku baru", "mainan"], 0, "Air kotor dapat membawa penyakit."],
+          ["Kegiatan menjaga kelas tetap bersih adalah ...", ["piket", "mencoret meja", "membuang sampah"], 0, "Piket membantu kelas bersih."],
+          ["Ciri lingkungan tidak sehat adalah ...", ["banyak sampah", "rapi", "udara segar"], 0, "Banyak sampah membuat lingkungan tidak sehat."]
+        ],
+        worksheet: ["Gambar lingkungan sehat.", "Sebutkan 3 cara menjaga kelas.", "Bandingkan lingkungan sehat dan tidak sehat."]
+      },
+      {
+        subject: "Science",
+        title: "Pengelolaan Sampah 3R",
+        source: "Science/5. Pengelolaan Sampah 3R.pdf",
+        points: ["Mengenal reduce, reuse, recycle.", "Mengurangi sampah dari kebiasaan sehari-hari.", "Memakai kembali barang yang masih layak."],
+        questions: [
+          ["3R adalah reduce, reuse, dan ...", ["recycle", "radio", "run"], 0, "R ketiga adalah recycle."],
+          ["Reduce berarti ...", ["mengurangi sampah", "menambah sampah", "membuang makanan"], 0, "Reduce artinya mengurangi."],
+          ["Reuse berarti ...", ["memakai kembali", "merusak barang", "membeli terus"], 0, "Reuse artinya memakai kembali."],
+          ["Recycle berarti ...", ["mendaur ulang", "mengotori", "membuang ke sungai"], 0, "Recycle artinya mendaur ulang."],
+          ["Contoh reduce adalah ...", ["membawa botol minum sendiri", "pakai plastik sekali pakai terus", "membuang kertas kosong"], 0, "Botol minum sendiri mengurangi sampah."]
+        ],
+        worksheet: ["Tuliskan arti reduce.", "Sebutkan contoh reuse di rumah.", "Buat ide daur ulang sederhana."]
+      },
+      {
+        subject: "Social",
+        title: "Makhluk Hidup dan Benda Mati",
+        source: "Social/1. Makhluk Hidup dan Benda Mati.pdf",
+        points: ["Membedakan makhluk hidup dan benda mati.", "Mengenal ciri makhluk hidup.", "Mengelompokkan contoh di sekitar."],
+        questions: [
+          ["Contoh makhluk hidup adalah ...", ["kucing", "meja", "batu"], 0, "Kucing bernapas, makan, dan tumbuh."],
+          ["Contoh benda mati adalah ...", ["kursi", "ayam", "pohon"], 0, "Kursi tidak bernapas dan tidak tumbuh."],
+          ["Makhluk hidup membutuhkan ...", ["makanan", "cat tembok", "penghapus"], 0, "Makhluk hidup membutuhkan makanan."],
+          ["Tumbuhan termasuk ...", ["makhluk hidup", "benda mati", "mainan"], 0, "Tumbuhan tumbuh dan membutuhkan air."],
+          ["Benda mati tidak dapat ...", ["tumbuh sendiri", "dipindahkan", "dilihat"], 0, "Benda mati tidak tumbuh sendiri."]
+        ],
+        worksheet: ["Kelompokkan 5 benda di rumah.", "Sebutkan ciri makhluk hidup.", "Gambar satu makhluk hidup."]
+      },
+      {
+        subject: "Social",
+        title: "Kegunaan Benda",
+        source: "Social/2. Kegunaan Benda.pdf",
+        points: ["Mengenal fungsi benda di rumah dan sekolah.", "Menggunakan benda sesuai kegunaannya.", "Merawat benda agar tidak cepat rusak."],
+        questions: [
+          ["Pensil digunakan untuk ...", ["menulis", "makan sup", "tidur"], 0, "Pensil dipakai untuk menulis."],
+          ["Payung digunakan saat ...", ["hujan", "tidur", "makan"], 0, "Payung melindungi dari hujan."],
+          ["Piring digunakan untuk ...", ["tempat makanan", "menulis", "menyapu"], 0, "Piring adalah tempat makanan."],
+          ["Sapu berguna untuk ...", ["membersihkan lantai", "membaca", "minum"], 0, "Sapu digunakan untuk membersihkan."],
+          ["Benda sekolah harus ...", ["dirawat", "dirusak", "dilempar"], 0, "Benda yang dirawat akan awet."]
+        ],
+        worksheet: ["Tulis 5 benda dan kegunaannya.", "Gambar benda favoritmu.", "Sebutkan cara merawat buku."]
+      },
+      {
+        subject: "Social",
+        title: "Peduli dan Berbagi",
+        source: "Social/3. Peduli dan Berbagi.pdf",
+        points: ["Mengenal sikap peduli kepada teman.", "Berbagi dengan sopan dan ikhlas.", "Membantu orang lain saat membutuhkan."],
+        questions: [
+          ["Saat teman tidak membawa pensil, kita dapat ...", ["meminjamkan jika ada", "mengejek", "merebut bukunya"], 0, "Meminjamkan adalah sikap peduli."],
+          ["Berbagi harus dilakukan dengan ...", ["ikhlas", "marah", "terpaksa sambil mengejek"], 0, "Berbagi yang baik dilakukan dengan ikhlas."],
+          ["Sikap peduli adalah ...", ["membantu teman", "mendorong teman", "menyembunyikan tas"], 0, "Membantu teman menunjukkan peduli."],
+          ["Saat melihat teman jatuh, kita sebaiknya ...", ["menolong", "tertawa", "pergi"], 0, "Menolong teman adalah sikap baik."],
+          ["Berbagi makanan harus tetap memperhatikan ...", ["kebersihan", "warna sepatu", "suara keras"], 0, "Kebersihan penting saat berbagi makanan."]
+        ],
+        worksheet: ["Ceritakan pengalaman berbagi.", "Sebutkan 3 contoh peduli.", "Tuliskan kalimat ajakan untuk membantu teman."]
+      },
+      {
+        subject: "Social",
+        title: "Peduli Lingkungan",
+        source: "Social/4. Peduli Lingkungan.pdf",
+        points: ["Mengenal tanggung jawab menjaga lingkungan.", "Melakukan kebiasaan bersih di sekolah dan rumah.", "Merawat tanaman dan menghemat air."],
+        questions: [
+          ["Contoh peduli lingkungan adalah ...", ["membuang sampah pada tempatnya", "mencoret dinding", "mematahkan tanaman"], 0, "Membuang sampah pada tempatnya menjaga lingkungan."],
+          ["Tanaman perlu ...", ["air", "asap", "sampah"], 0, "Tanaman membutuhkan air."],
+          ["Menghemat air berarti ...", ["memakai air secukupnya", "membuka keran terus", "membuang air"], 0, "Air digunakan secukupnya."],
+          ["Kelas bersih membuat belajar terasa ...", ["nyaman", "bau", "gelap"], 0, "Kelas bersih membuat nyaman."],
+          ["Jika melihat sampah di lantai, kita sebaiknya ...", ["mengambil dan membuangnya", "menendang", "membiarkan"], 0, "Sampah sebaiknya dibuang ke tempat sampah."]
+        ],
+        worksheet: ["Buat daftar tugas piket.", "Sebutkan cara hemat air.", "Gambar kegiatan merawat tanaman."]
+      }
+    ];
+
+    function buildExtraQuestions(topic) {
+      const baseTitle = topic.title.toLowerCase();
+      const pointA = topic.points[0] || topic.title;
+      const pointB = topic.points[1] || topic.title;
+      const pointC = topic.points[2] || topic.title;
+      return [
+        [`Topik "${topic.title}" paling dekat dengan kegiatan ...`, [`belajar ${baseTitle}`, "bermain tanpa aturan", "membuang barang sembarangan"], 0, `Soal ini membahas ${topic.title}.`],
+        [`Manakah contoh yang sesuai dengan materi "${topic.title}"?`, [pointA, "mengganggu teman saat belajar", "tidak memperhatikan guru"], 0, pointA],
+        [`Saat mengerjakan materi ini, sikap yang baik adalah ...`, ["teliti dan mau mencoba", "terburu-buru tanpa membaca", "menjawab asal-asalan"], 0, "Membaca teliti membantu jawaban lebih tepat."],
+        [`Apa yang perlu dilakukan sebelum menjawab soal "${topic.title}"?`, ["membaca soal dengan baik", "menutup soal", "memilih jawaban acak"], 0, "Pahami soal dahulu sebelum memilih jawaban."],
+        [`Materi ini dapat dilatih dengan cara ...`, ["mengerjakan contoh soal", "menghindari latihan", "menyalin tanpa memahami"], 0, "Latihan contoh soal membantu memahami materi."],
+        [`Pernyataan yang benar tentang materi ini adalah ...`, [pointB, "materi tidak perlu dipelajari", "semua jawaban selalu sama"], 0, pointB],
+        [`Mengapa siswa perlu memahami "${topic.title}"?`, ["agar dapat memakai pengetahuan dalam kegiatan sehari-hari", "agar tidak perlu belajar lagi", "agar bisa menebak semua soal"], 0, "Materi kelas 1 dekat dengan kegiatan sehari-hari."],
+        [`Jika belum paham materi ini, sebaiknya siswa ...`, ["bertanya dan mencoba lagi", "menyerah", "menghapus semua jawaban"], 0, "Bertanya dan mengulang latihan adalah cara belajar yang baik."],
+        [`Manakah kebiasaan belajar yang cocok untuk "${topic.title}"?`, ["mengulang soal yang salah", "melewati soal sulit terus-menerus", "tidak membaca pilihan"], 0, "Mengulang soal salah membantu memperbaiki pemahaman."],
+        [`Hal penting dari topik ini adalah ...`, [pointC, "menjawab cepat tanpa berpikir", "tidak menyelesaikan latihan"], 0, pointC]
+      ];
+    }
+
+    function buildExtraEssays(topic) {
+      return [
+        `Jelaskan dengan bahasamu sendiri tentang ${topic.title}.`,
+        `Sebutkan 3 contoh yang berhubungan dengan ${topic.title}.`,
+        `Tuliskan satu pengalamanmu yang sesuai dengan ${topic.title}.`,
+        `Apa manfaat belajar ${topic.title}?`,
+        `Buat satu kalimat sederhana tentang ${topic.title}.`,
+        `Tuliskan hal yang masih sulit dari materi ${topic.title}.`,
+        `Sebutkan satu kegiatan di rumah atau sekolah yang sesuai dengan ${topic.title}.`
+      ];
+    }
+
+    TOPICS.forEach(topic => {
+      topic.questions = [...topic.questions, ...buildExtraQuestions(topic)];
+      topic.essays = [...topic.worksheet, ...buildExtraEssays(topic)];
+    });
+
+    const FIREBASE_CONFIG = {
+      apiKey: "ISI_API_KEY_FIREBASE",
+      authDomain: "ISI_PROJECT_ID.firebaseapp.com",
+      projectId: "ISI_PROJECT_ID",
+      storageBucket: "ISI_PROJECT_ID.firebasestorage.app",
+      messagingSenderId: "ISI_MESSAGING_SENDER_ID",
+      appId: "ISI_APP_ID"
+    };
+
+    const firebaseState = {
+      app: null,
+      auth: null,
+      db: null,
+      user: null,
+      ready: false,
+      configured: !Object.values(FIREBASE_CONFIG).some(value => String(value).startsWith("ISI_"))
+    };
+
+    const state = {
+      selected: 0,
+      tab: "quiz",
+      q: 0,
+      answered: false,
+      filter: "Semua",
+      search: "",
+      orders: { quiz: {}, essay: {} },
+      scores: JSON.parse(localStorage.getItem("jawaraScores") || "{}"),
+      answers: JSON.parse(localStorage.getItem("jawaraAnswers") || "{}"),
+      essays: JSON.parse(localStorage.getItem("jawaraEssays") || "{}"),
+      quickOpen: false,
+      expandedSubjects: {},
+      sidebarHidden: false,
+      pendingTopic: null,
+      name: localStorage.getItem("jawaraName") || ""
+    };
+
+    const els = {
+      app: document.querySelector(".app"),
+      studentName: document.querySelector("#studentName"),
+      search: document.querySelector("#search"),
+      subjectFilter: document.querySelector("#subjectFilter"),
+      subjectList: document.querySelector("#subjectList"),
+      quickToggle: document.querySelector("#quickToggle"),
+      quickToggleIcon: document.querySelector("#quickToggleIcon"),
+      quickPanel: document.querySelector("#quickPanel"),
+      sideToggle: document.querySelector("#sideToggle"),
+      topicTotal: document.querySelector("#topicTotal"),
+      scoreTotal: document.querySelector("#scoreTotal"),
+      userChip: document.querySelector("#userChip"),
+      userAvatar: document.querySelector("#userAvatar"),
+      userName: document.querySelector("#userName"),
+      userEmail: document.querySelector("#userEmail"),
+      loginBtn: document.querySelector("#loginBtn"),
+      logoutBtn: document.querySelector("#logoutBtn"),
+      syncStatus: document.querySelector("#syncStatus"),
+      confirmModal: document.querySelector("#confirmModal"),
+      confirmText: document.querySelector("#confirmText"),
+      cancelTopicBtn: document.querySelector("#cancelTopicBtn"),
+      confirmTopicBtn: document.querySelector("#confirmTopicBtn"),
+      materialCard: document.querySelector("#materialCard"),
+      practiceCard: document.querySelector("#practiceCard"),
+      shuffleBtn: document.querySelector("#shuffleBtn"),
+      resetTopicBtn: document.querySelector("#resetTopicBtn"),
+      resetBtn: document.querySelector("#resetBtn"),
+      printBtn: document.querySelector("#printBtn")
+    };
+
+    const subjects = ["Semua", ...Array.from(new Set(TOPICS.map(topic => topic.subject)))];
+
+    function topicKey(index) {
+      return TOPICS[index].subject + "::" + TOPICS[index].title;
+    }
+
+    function shuffledIndexes(length) {
+      const indexes = Array.from({ length }, (_, index) => index);
+      for (let i = indexes.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indexes[i], indexes[j]] = [indexes[j], indexes[i]];
+      }
+      return indexes;
+    }
+
+    function ensureOrder(mode, index = state.selected) {
+      const key = topicKey(index);
+      const source = mode === "essay" ? TOPICS[index].essays : TOPICS[index].questions;
+      if (!state.orders[mode][key] || state.orders[mode][key].length !== source.length) {
+        state.orders[mode][key] = shuffledIndexes(source.length);
+      }
+      return state.orders[mode][key];
+    }
+
+    function reshuffleTopic(index) {
+      const key = topicKey(index);
+      state.orders.quiz[key] = shuffledIndexes(TOPICS[index].questions.length);
+      state.orders.essay[key] = shuffledIndexes(TOPICS[index].essays.length);
+    }
+
+    function reshuffleCategory(subject) {
+      TOPICS.forEach((topic, index) => {
+        if (subject === "Semua" || topic.subject === subject) reshuffleTopic(index);
+      });
+    }
+
+    function getScore(index) {
+      const item = state.scores[topicKey(index)] || { correct: 0, total: 0 };
+      return item;
+    }
+
+    function saveScores() {
+      localStorage.setItem("jawaraScores", JSON.stringify(state.scores));
+    }
+
+    function saveAnswers() {
+      localStorage.setItem("jawaraAnswers", JSON.stringify(state.answers));
+    }
+
+    function saveEssays() {
+      localStorage.setItem("jawaraEssays", JSON.stringify(state.essays));
+    }
+
+    function persistPracticeState() {
+      saveScores();
+      saveAnswers();
+      saveEssays();
+      scheduleCloudSave();
+    }
+
+    function setSyncStatus(text) {
+      els.syncStatus.textContent = text;
+    }
+
+    function studentDocId() {
+      return firebaseState.user?.email ? firebaseState.user.email.toLowerCase() : null;
+    }
+
+    function studentPayload() {
+      return {
+        profile: {
+          email: firebaseState.user?.email || "",
+          name: state.name || firebaseState.user?.displayName || "",
+          googleName: firebaseState.user?.displayName || "",
+          photoURL: firebaseState.user?.photoURL || ""
+        },
+        progress: {
+          scores: state.scores,
+          answers: state.answers,
+          essays: state.essays
+        },
+        updatedAt: new Date().toISOString()
+      };
+    }
+
+    let saveTimer = null;
+    function scheduleCloudSave() {
+      if (!firebaseState.ready || !firebaseState.user) return;
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(saveCloudProgress, 500);
+    }
+
+    async function saveCloudProgress() {
+      if (!firebaseState.ready || !firebaseState.user) return;
+      try {
+        const { doc, setDoc } = firebaseState.firestoreApi;
+        await setDoc(doc(firebaseState.db, "studentProgress", studentDocId()), studentPayload(), { merge: true });
+        setSyncStatus("Tersimpan ke Firebase.");
+      } catch (error) {
+        setSyncStatus("Gagal sync Firebase. Data lokal tetap tersimpan.");
+      }
+    }
+
+    async function loadCloudProgress() {
+      if (!firebaseState.ready || !firebaseState.user) return;
+      try {
+        const { doc, getDoc } = firebaseState.firestoreApi;
+        const snap = await getDoc(doc(firebaseState.db, "studentProgress", studentDocId()));
+        if (!snap.exists()) {
+          await saveCloudProgress();
+          return;
+        }
+        const data = snap.data();
+        const progress = data.progress || {};
+        state.scores = progress.scores || {};
+        state.answers = progress.answers || {};
+        state.essays = progress.essays || {};
+        state.name = data.profile?.name || firebaseState.user.displayName || state.name;
+        els.studentName.value = state.name;
+        localStorage.setItem("jawaraName", state.name);
+        persistPracticeState();
+        render();
+        setSyncStatus("Data siswa dimuat dari Firebase.");
+      } catch (error) {
+        setSyncStatus("Gagal memuat Firebase. Memakai data lokal.");
+      }
+    }
+
+    function renderAuth() {
+      if (!firebaseState.configured) {
+        els.loginBtn.disabled = true;
+        els.loginBtn.textContent = "Login Google";
+        els.logoutBtn.style.display = "none";
+        els.userChip.classList.remove("show");
+        setSyncStatus("Isi FIREBASE_CONFIG untuk mengaktifkan login Google.");
+        return;
+      }
+
+      const user = firebaseState.user;
+      els.loginBtn.disabled = !firebaseState.ready;
+      els.loginBtn.style.display = user ? "none" : "block";
+      els.logoutBtn.style.display = user ? "block" : "none";
+      els.userChip.classList.toggle("show", !!user);
+      if (!user) {
+        setSyncStatus(firebaseState.ready ? "Login Google untuk memuat jawaban siswa." : "Menyiapkan Firebase...");
+        return;
+      }
+
+      els.userName.textContent = state.name || user.displayName || "Siswa";
+      els.userEmail.textContent = user.email || "";
+      els.userAvatar.innerHTML = user.photoURL ? `<img src="${user.photoURL}" alt="">` : (user.displayName || user.email || "?").slice(0, 1).toUpperCase();
+    }
+
+    async function initFirebase() {
+      renderAuth();
+      if (!firebaseState.configured) return;
+
+      try {
+        const appApi = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js");
+        const authApi = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js");
+        const firestoreApi = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js");
+
+        firebaseState.app = appApi.initializeApp(FIREBASE_CONFIG);
+        firebaseState.auth = authApi.getAuth(firebaseState.app);
+        firebaseState.db = firestoreApi.getFirestore(firebaseState.app);
+        firebaseState.authApi = authApi;
+        firebaseState.firestoreApi = firestoreApi;
+        firebaseState.ready = true;
+
+        authApi.onAuthStateChanged(firebaseState.auth, async user => {
+          firebaseState.user = user;
+          if (user) {
+            state.name = state.name || user.displayName || "";
+            els.studentName.value = state.name;
+            localStorage.setItem("jawaraName", state.name);
+            renderAuth();
+            setSyncStatus("Memuat data siswa dari Firebase...");
+            await loadCloudProgress();
+          } else {
+            renderAuth();
+          }
+        });
+
+        renderAuth();
+      } catch (error) {
+        firebaseState.ready = false;
+        setSyncStatus("Firebase belum bisa dimuat. Data lokal tetap aktif.");
+      }
+    }
+
+    async function loginGoogle() {
+      if (!firebaseState.ready) return;
+      try {
+        const provider = new firebaseState.authApi.GoogleAuthProvider();
+        await firebaseState.authApi.signInWithPopup(firebaseState.auth, provider);
+      } catch (error) {
+        setSyncStatus("Login Google dibatalkan atau gagal.");
+      }
+    }
+
+    async function logoutGoogle() {
+      if (!firebaseState.ready) return;
+      try {
+        await saveCloudProgress();
+        await firebaseState.authApi.signOut(firebaseState.auth);
+        firebaseState.user = null;
+        renderAuth();
+      } catch (error) {
+        setSyncStatus("Logout gagal. Coba lagi.");
+      }
+    }
+
+    function resetTopicProgress(index = state.selected) {
+      const key = topicKey(index);
+      delete state.scores[key];
+      Object.keys(state.answers).forEach(answerKey => {
+        if (answerKey.startsWith(key + "::")) delete state.answers[answerKey];
+      });
+      Object.keys(state.essays).forEach(essayKey => {
+        if (essayKey.startsWith(key + "::")) delete state.essays[essayKey];
+      });
+      state.q = 0;
+      state.answered = false;
+      persistPracticeState();
+      render();
+    }
+
+    function resetAllProgress() {
+      state.scores = {};
+      state.answers = {};
+      state.essays = {};
+      state.q = 0;
+      state.answered = false;
+      persistPracticeState();
+      render();
+    }
+
+    function filteredTopics() {
+      const query = state.search.trim().toLowerCase();
+      return TOPICS.map((topic, index) => ({ topic, index })).filter(item => {
+        const subjectMatch = state.filter === "Semua" || item.topic.subject === state.filter;
+        const text = [item.topic.subject, item.topic.title, item.topic.source, ...item.topic.points].join(" ").toLowerCase();
+        return subjectMatch && (!query || text.includes(query));
+      });
+    }
+
+    function filteredTopicsForSubject(subject) {
+      const query = state.search.trim().toLowerCase();
+      return TOPICS.map((topic, index) => ({ topic, index })).filter(item => {
+        const subjectMatch = subject === "Semua" || item.topic.subject === subject;
+        const text = [item.topic.subject, item.topic.title, item.topic.source, ...item.topic.points].join(" ").toLowerCase();
+        return subjectMatch && (!query || text.includes(query));
+      });
+    }
+
+    function renderFilters() {
+      els.subjectFilter.innerHTML = subjects.map(subject => `<option ${subject === state.filter ? "selected" : ""}>${subject}</option>`).join("");
+      els.subjectList.innerHTML = subjects.map(subject => {
+        const count = subject === "Semua" ? TOPICS.length : TOPICS.filter(topic => topic.subject === subject).length;
+        const submenuItems = filteredTopicsForSubject(subject);
+        const expanded = !!state.expandedSubjects[subject];
+        return `<button class="subject-btn ${subject === state.filter ? "active" : ""}" data-subject="${subject}">
+          <span>${subject} <span class="small">(${count})</span></span>
+          <span class="subject-chevron">${expanded ? "-" : "+"}</span>
+        </button>
+        ${expanded ? `<div class="topic-submenu">
+          ${submenuItems.length ? submenuItems.map(({ topic, index }) => {
+            const score = getScore(index);
+            return `<button class="topic-submenu-btn ${index === state.selected ? "active" : ""}" data-topic="${index}">
+              ${topic.title}<br><span class="small">${topic.questions.length} PG | ${topic.essays.length} esai | ${score.correct}/${score.total || 0}</span>
+            </button>`;
+          }).join("") : `<div class="small">Tidak ada topik cocok.</div>`}
+        </div>` : ""}`;
+      }).join("");
+    }
+
+    function renderStats() {
+      const totalAnswered = Object.values(state.scores).reduce((sum, item) => sum + item.total, 0);
+      const totalCorrect = Object.values(state.scores).reduce((sum, item) => sum + item.correct, 0);
+      els.topicTotal.textContent = TOPICS.length;
+      els.scoreTotal.textContent = totalAnswered ? Math.round((totalCorrect / totalAnswered) * 100) + "%" : "0%";
+    }
+
+    function renderChrome() {
+      els.app.classList.toggle("sidebar-hidden", state.sidebarHidden);
+      els.quickPanel.classList.toggle("show", state.quickOpen);
+      els.quickToggle.setAttribute("aria-expanded", String(state.quickOpen));
+      els.quickToggleIcon.textContent = state.quickOpen ? "-" : "+";
+      els.sideToggle.textContent = state.sidebarHidden ? ">" : "<";
+      els.sideToggle.setAttribute("aria-label", state.sidebarHidden ? "Tampilkan menu" : "Sembunyikan menu");
+    }
+
+    function renderMaterial() {
+      const topic = TOPICS[state.selected];
+      const score = getScore(state.selected);
+      const pct = score.total ? Math.round((score.correct / score.total) * 100) : 0;
+      els.materialCard.innerHTML = `
+        <div class="card-head">
+          <div class="topic-meta">
+            <span class="pill">${topic.subject}</span>
+            <span class="pill teal">${topic.questions.length} PG</span>
+            <span class="pill teal">${topic.essays.length} esai</span>
+            <span class="pill gold">${pct}% skor topik</span>
+          </div>
+          <h3 class="topic-title">${topic.title}</h3>
+          <p class="small">Sumber: JAWARA Semester 2/${topic.source}</p>
+        </div>
+        <div class="card-body">
+          <div class="label">Fokus materi</div>
+          <ul class="points">${topic.points.map(point => `<li>${point}</li>`).join("")}</ul>
+        </div>
+      `;
+    }
+
+    function quizKeyByOriginalIndex(originalIndex) {
+      return topicKey(state.selected) + "::" + originalIndex;
+    }
+
+    function essayKeyByOriginalIndex(originalIndex) {
+      return topicKey(state.selected) + "::" + originalIndex;
+    }
+
+    function renderQuiz() {
+      const topic = TOPICS[state.selected];
+      const order = ensureOrder("quiz");
+      els.practiceCard.innerHTML = `
+        <div class="question-box">
+          <div class="mode-note">
+            <div class="question-count">${order.length} soal pilihan ganda - urutan acak</div>
+            <div class="small">Jawaban yang sudah dipilih akan tetap terlihat.</div>
+          </div>
+          <div class="question-list">
+            ${order.map((originalIndex, displayIndex) => {
+              const item = topic.questions[originalIndex];
+              const saved = state.answers[quizKeyByOriginalIndex(originalIndex)];
+              const hasSaved = saved !== undefined;
+              return `<section class="question-item" data-question-index="${originalIndex}">
+                <div class="question-count">Soal ${displayIndex + 1}</div>
+                <div class="question">${item[0]}</div>
+                <div class="options">
+                  ${item[1].map((option, index) => {
+                    const cls = hasSaved && index === item[2] ? " correct" : hasSaved && index === saved ? " wrong" : "";
+                    return `<button class="option${cls}" data-answer="${index}" data-question-index="${originalIndex}">${String.fromCharCode(65 + index)}. ${option}</button>`;
+                  }).join("")}
+                </div>
+                <div class="feedback ${hasSaved ? saved === item[2] ? "ok" : "bad" : ""}" data-feedback="${originalIndex}">
+                  ${hasSaved ? `${saved === item[2] ? "Benar." : "Belum tepat."} Jawaban kamu: ${String.fromCharCode(65 + saved)}. ${item[3]}` : "Pilih satu jawaban."}
+                </div>
+              </section>`;
+            }).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function quizKey() {
+      const order = ensureOrder("quiz");
+      return topicKey(state.selected) + "::" + order[state.q];
+    }
+
+    function essayKey() {
+      const order = ensureOrder("essay");
+      return topicKey(state.selected) + "::" + order[state.q];
+    }
+
+    function renderEssay() {
+      const topic = TOPICS[state.selected];
+      const order = ensureOrder("essay");
+      els.practiceCard.innerHTML = `
+        <div class="question-box">
+          <div class="mode-note">
+            <div class="question-count">${order.length} soal esai - urutan acak</div>
+            <div class="small">Jawaban tersimpan otomatis.</div>
+          </div>
+          <div class="question-list">
+            ${order.map((originalIndex, displayIndex) => {
+              const prompt = topic.essays[originalIndex];
+              const value = state.essays[essayKeyByOriginalIndex(originalIndex)] || "";
+              return `<section class="question-item">
+                <div class="question-count">Esai ${displayIndex + 1}</div>
+                <div class="question">${prompt}</div>
+                <textarea class="essay-area" data-essay-index="${originalIndex}" placeholder="Tulis jawabanmu di sini...">${value}</textarea>
+              </section>`;
+            }).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderWorksheet() {
+      const topic = TOPICS[state.selected];
+      const quizOrder = ensureOrder("quiz");
+      const essayOrder = ensureOrder("essay");
+      els.practiceCard.innerHTML = `
+        <div class="worksheet show">
+          <div class="question-count">Worksheet ${state.name ? "untuk " + state.name : ""}</div>
+          <h3>${topic.title}</h3>
+          <p class="small">${topic.subject} | JAWARA Semester 2</p>
+          <h3>Pilihan Ganda</h3>
+          <ol>
+            ${quizOrder.map(index => topic.questions[index]).map(q => `<li>${q[0]}<br>A. ${q[1][0]}<br>B. ${q[1][1]}<br>C. ${q[1][2]}</li>`).join("")}
+          </ol>
+          <h3>Esai</h3>
+          <ol>
+            ${essayOrder.map(index => topic.essays[index]).map(q => `<li>${q}<span class="blank"></span></li>`).join("")}
+          </ol>
+        </div>
+      `;
+    }
+
+    function renderPractice() {
+      document.querySelectorAll(".tab").forEach(tab => tab.classList.toggle("active", tab.dataset.tab === state.tab));
+      if (state.tab === "quiz") renderQuiz();
+      if (state.tab === "essay") renderEssay();
+    }
+
+    function render() {
+      renderChrome();
+      renderFilters();
+      renderStats();
+      renderMaterial();
+      renderPractice();
+    }
+
+    function selectTopic(index) {
+      if (index === state.selected) return;
+      state.selected = index;
+      state.filter = TOPICS[index].subject;
+      state.q = 0;
+      state.answered = false;
+      reshuffleTopic(index);
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function requestTopicChange(index) {
+      if (index === state.selected) return;
+      state.pendingTopic = index;
+      els.confirmText.textContent = `Pindah ke topik "${TOPICS[index].title}"? Urutan soal akan diacak ulang.`;
+      els.confirmModal.classList.add("show");
+    }
+
+    function closeTopicConfirm() {
+      state.pendingTopic = null;
+      els.confirmModal.classList.remove("show");
+    }
+
+    function confirmTopicChange() {
+      if (state.pendingTopic === null) return;
+      const next = state.pendingTopic;
+      closeTopicConfirm();
+      selectTopic(next);
+    }
+
+    function answerQuestion(button) {
+      const topic = TOPICS[state.selected];
+      const originalIndex = Number(button.dataset.questionIndex);
+      const item = topic.questions[originalIndex];
+      const picked = Number(button.dataset.answer);
+      const correct = item[2];
+      const key = topicKey(state.selected);
+      const answerKey = quizKeyByOriginalIndex(originalIndex);
+      const previous = state.answers[answerKey];
+      state.scores[key] = state.scores[key] || { correct: 0, total: 0 };
+      if (previous === undefined) {
+        state.scores[key].total += 1;
+        if (picked === correct) state.scores[key].correct += 1;
+      } else {
+        if (previous === correct && picked !== correct) state.scores[key].correct -= 1;
+        if (previous !== correct && picked === correct) state.scores[key].correct += 1;
+      }
+      state.answers[answerKey] = picked;
+      saveAnswers();
+      saveScores();
+      scheduleCloudSave();
+
+      const questionItem = button.closest(".question-item");
+      questionItem.querySelectorAll(".option").forEach(option => {
+        const index = Number(option.dataset.answer);
+        option.classList.toggle("correct", index === correct);
+        option.classList.toggle("wrong", index === picked && picked !== correct);
+      });
+
+      const feedback = questionItem.querySelector("[data-feedback]");
+      feedback.className = picked === correct ? "feedback ok" : "feedback bad";
+      feedback.textContent = `${picked === correct ? "Benar." : "Belum tepat."} Jawaban kamu: ${String.fromCharCode(65 + picked)}. ${item[3]}`;
+      renderStats();
+      renderFilters();
+    }
+
+    function moveQuestion(step) {
+      const topic = TOPICS[state.selected];
+      const max = state.tab === "essay" ? ensureOrder("essay").length : ensureOrder("quiz").length;
+      state.q = (state.q + step + max) % max;
+      state.answered = false;
+      renderPractice();
+    }
+
+    els.studentName.value = state.name;
+    els.studentName.addEventListener("input", event => {
+      state.name = event.target.value.trim();
+      localStorage.setItem("jawaraName", state.name);
+      renderAuth();
+      scheduleCloudSave();
+    });
+
+    els.search.addEventListener("input", event => {
+      state.search = event.target.value;
+      renderFilters();
+    });
+
+    els.subjectFilter.addEventListener("change", event => {
+      state.quickOpen = true;
+      state.expandedSubjects[event.target.value] = true;
+      state.filter = event.target.value;
+      renderFilters();
+      renderChrome();
+    });
+
+    els.quickToggle.addEventListener("click", () => {
+      state.quickOpen = !state.quickOpen;
+      renderChrome();
+    });
+
+    els.sideToggle.addEventListener("click", () => {
+      state.sidebarHidden = !state.sidebarHidden;
+      renderChrome();
+    });
+
+    els.subjectList.addEventListener("click", event => {
+      const topicButton = event.target.closest("[data-topic]");
+      if (topicButton) {
+        requestTopicChange(Number(topicButton.dataset.topic));
+        return;
+      }
+      const button = event.target.closest("[data-subject]");
+      if (!button) return;
+      const subject = button.dataset.subject;
+      state.expandedSubjects[subject] = !state.expandedSubjects[subject];
+      if (state.expandedSubjects[subject]) {
+        state.filter = subject;
+      }
+      renderFilters();
+    });
+
+    document.querySelector(".tabs").addEventListener("click", event => {
+      const button = event.target.closest("[data-tab]");
+      if (!button) return;
+      state.tab = button.dataset.tab;
+      state.q = 0;
+      state.answered = false;
+      renderPractice();
+    });
+
+    els.practiceCard.addEventListener("click", event => {
+      const option = event.target.closest("[data-answer]");
+      if (option) answerQuestion(option);
+    });
+
+    els.practiceCard.addEventListener("input", event => {
+      if (!event.target.matches("[data-essay-index]")) return;
+      state.essays[essayKeyByOriginalIndex(Number(event.target.dataset.essayIndex))] = event.target.value;
+      saveEssays();
+      scheduleCloudSave();
+    });
+
+    els.loginBtn.addEventListener("click", loginGoogle);
+
+    els.logoutBtn.addEventListener("click", logoutGoogle);
+
+    els.cancelTopicBtn.addEventListener("click", closeTopicConfirm);
+
+    els.confirmTopicBtn.addEventListener("click", confirmTopicChange);
+
+    els.confirmModal.addEventListener("click", event => {
+      if (event.target === els.confirmModal) closeTopicConfirm();
+    });
+
+    els.shuffleBtn.addEventListener("click", () => {
+      const items = filteredTopics();
+      if (!items.length) return;
+      const next = items[Math.floor(Math.random() * items.length)].index;
+      requestTopicChange(next);
+    });
+
+    els.resetBtn.addEventListener("click", () => {
+      resetAllProgress();
+    });
+
+    els.resetTopicBtn.addEventListener("click", () => {
+      resetTopicProgress();
+    });
+
+    els.printBtn.addEventListener("click", () => {
+      renderWorksheet();
+      window.print();
+    });
+
+    render();
+    initFirebase();
+  </script>
+</body>
+</html>
