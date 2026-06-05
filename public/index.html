@@ -995,6 +995,7 @@
     </div>
   </div>
 
+  <script src="/firebase-config.js"></script>
   <script>
     const TOPICS = [
       {
@@ -1402,13 +1403,13 @@
       }
     });
 
-    const FIREBASE_CONFIG = {
-      apiKey: "AIzaSyBh4NvwCIPK5o4QqmslPp-KHw4Ekv9EJSY",
-      authDomain: "latihan-jawara.firebaseapp.com",
-      projectId: "latihan-jawara",
-      storageBucket: "latihan-jawara.firebasestorage.app",
-      messagingSenderId: "1044077137623",
-      appId: "1:1044077137623:web:a467c66a9ff2f653336a92"
+    const FIREBASE_CONFIG = window.__FIREBASE_CONFIG__ || {
+      apiKey: "",
+      authDomain: "",
+      projectId: "",
+      storageBucket: "",
+      messagingSenderId: "",
+      appId: ""
     };
 
     const firebaseState = {
@@ -1417,7 +1418,7 @@
       db: null,
       user: null,
       ready: false,
-      configured: !Object.values(FIREBASE_CONFIG).some(value => String(value).startsWith("ISI_"))
+      configured: Object.values(FIREBASE_CONFIG).every(Boolean)
     };
 
     const state = {
@@ -1587,7 +1588,7 @@
         els.logoutBtn.style.display = "none";
         els.userChip.classList.remove("show");
         if (studentNamePanel) studentNamePanel.style.display = "none";
-        setSyncStatus("Isi FIREBASE_CONFIG untuk mengaktifkan login Google.");
+        setSyncStatus("Isi public/firebase-config.js untuk mengaktifkan login Google.");
         return;
       }
 
