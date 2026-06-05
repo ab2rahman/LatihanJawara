@@ -59,12 +59,32 @@
       position: sticky;
       top: 0;
       height: 100vh;
-      overflow: auto;
-      padding: 20px;
-      background: rgba(255,255,255,.94);
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 0;
+      background: rgba(255,255,255,.96);
       border-right: 1px solid var(--line);
       backdrop-filter: blur(12px);
       transition: opacity .18s ease, transform .18s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background: var(--muted);
+      border-radius: 3px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb:hover {
+      background: var(--ink);
     }
 
     .app.sidebar-hidden .sidebar {
@@ -77,24 +97,40 @@
     }
 
     .brand {
-      display: grid;
-      grid-template-columns: 52px 1fr;
-      gap: 12px;
+      display: flex;
       align-items: center;
-      margin-bottom: 18px;
+      gap: 12px;
+      padding: 20px 20px 16px 20px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(135deg, rgba(37, 99, 235, .03), rgba(15, 118, 110, .03));
     }
 
     .mark {
-      width: 52px;
-      height: 52px;
+      width: 48px;
+      height: 48px;
       display: grid;
       place-items: center;
-      border-radius: 10px;
+      border-radius: 12px;
       color: white;
       background: linear-gradient(135deg, var(--blue), var(--teal));
       box-shadow: var(--shadow);
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .brand-text h1 {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+
+    .brand-text .small {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
     }
 
     h1, h2, h3, p { margin-top: 0; }
@@ -112,11 +148,39 @@
     }
 
     .panel {
-      margin: 14px 0;
-      padding: 14px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
+      margin: 0;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line);
       background: var(--paper);
+    }
+
+    .panel:first-of-type {
+      border-top: none;
+    }
+
+    .sidebar-section {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .sidebar-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sidebar-section-title::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--blue);
     }
 
     .collapsible-panel {
@@ -159,83 +223,131 @@
     }
 
     .field {
-      display: grid;
-      gap: 7px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
       margin-bottom: 12px;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
     }
 
     .label {
       color: var(--muted);
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .06em;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
     }
 
     .input, .select {
       width: 100%;
-      min-height: 42px;
-      padding: 10px 11px;
+      min-height: 44px;
+      padding: 10px 12px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: white;
       color: var(--ink);
       outline: none;
+      font-size: 14px;
+      transition: all .2s ease;
     }
 
     .input:focus, .select:focus {
       border-color: var(--blue);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, .1);
+    }
+
+    .input::placeholder {
+      color: var(--muted);
+      opacity: 0.7;
     }
 
     .stats {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
+      gap: 10px;
     }
 
     .stat {
-      padding: 12px;
-      border-radius: 8px;
-      background: var(--soft);
+      padding: 14px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(37, 99, 235, .05), rgba(15, 118, 110, .05));
       border: 1px solid var(--line);
+      text-align: center;
+      transition: all .2s ease;
+    }
+
+    .stat:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(24, 32, 47, .08);
     }
 
     .stat strong {
       display: block;
-      font-size: 22px;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--blue);
+    }
+
+    .stat span {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
     }
 
     .auth-row {
-      display: grid;
-      gap: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(135deg, rgba(37, 99, 235, .02), rgba(15, 118, 110, .02));
+    }
+
+    .auth-row .label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      margin-bottom: 4px;
     }
 
     .user-chip {
       display: none;
-      grid-template-columns: 34px 1fr;
-      gap: 9px;
+      grid-template-columns: 40px 1fr;
+      gap: 12px;
       align-items: center;
-      padding: 8px;
+      padding: 10px 12px;
       border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #f8fafc;
+      border-radius: 10px;
+      background: white;
+      box-shadow: 0 2px 8px rgba(24, 32, 47, .06);
+      transition: all .2s ease;
     }
 
     .user-chip.show {
       display: grid;
     }
 
+    .user-chip:hover {
+      box-shadow: 0 4px 12px rgba(24, 32, 47, .1);
+      transform: translateY(-1px);
+    }
+
     .avatar {
-      width: 34px;
-      height: 34px;
+      width: 40px;
+      height: 40px;
       display: grid;
       place-items: center;
-      border-radius: 999px;
+      border-radius: 12px;
       color: white;
-      background: var(--teal);
-      font-weight: 900;
+      background: linear-gradient(135deg, var(--blue), var(--teal));
+      font-weight: 700;
+      font-size: 16px;
       overflow: hidden;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, .2);
     }
 
     .avatar img {
@@ -244,16 +356,49 @@
       object-fit: cover;
     }
 
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .user-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .user-email {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
     .sync-status {
-      min-height: 18px;
+      min-height: 20px;
       color: var(--muted);
       font-size: 12px;
-      line-height: 1.35;
+      line-height: 1.4;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sync-status::before {
+      content: "●";
+      font-size: 8px;
+      color: var(--ok);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
     }
 
     .subject-list {
-      display: grid;
-      gap: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
 
     .subject-btn {
@@ -262,29 +407,41 @@
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      padding: 10px 12px;
+      padding: 12px 14px;
       text-align: left;
-      background: #f7fafc;
+      background: white;
       color: var(--ink);
       border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all .2s ease;
+    }
+
+    .subject-btn:hover {
+      background: var(--soft);
+      border-color: var(--blue);
+      transform: translateX(2px);
     }
 
     .subject-btn.active {
       color: white;
-      background: var(--blue);
+      background: linear-gradient(135deg, var(--blue), var(--teal));
       border-color: var(--blue);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, .2);
     }
 
     .subject-chevron {
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
       display: grid;
       place-items: center;
       flex: 0 0 auto;
-      border-radius: 999px;
-      background: rgba(255,255,255,.68);
+      border-radius: 8px;
+      background: rgba(255,255,255,.15);
       color: inherit;
-      font-weight: 900;
+      font-weight: 700;
+      font-size: 12px;
     }
 
     .topic-submenu {
@@ -733,59 +890,68 @@
 <body>
   <div class="app">
     <aside class="sidebar">
+      <!-- Brand Section -->
       <div class="brand">
         <div class="mark">J2</div>
-        <div>
-          <h1>Latihan JAWARA Semester 2</h1>
-          <div class="small">Bank latihan interaktif untuk siswa kelas 1.</div>
+        <div class="brand-text">
+          <h1>Latihan JAWARA</h1>
+          <div class="small">Semester 2 • Kelas 1</div>
         </div>
       </div>
 
-      <div class="panel">
+      <!-- Student Name Section (Hidden until login) -->
+      <div class="sidebar-section" id="studentNamePanel" style="display:none">
+        <div class="sidebar-section-title">Profil Siswa</div>
         <div class="field">
-          <label class="label" for="studentName">Nama siswa</label>
-          <input class="input" id="studentName" placeholder="Tulis nama">
+          <input class="input" id="studentName" placeholder="Tulis nama kamu">
+        </div>
+      </div>
+
+      <!-- Search & Filter Section -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Pencarian</div>
+        <div class="field">
+          <input class="input" id="search" placeholder="Cari materi...">
         </div>
         <div class="field">
-          <label class="label" for="search">Cari materi</label>
-          <input class="input" id="search" placeholder="Contoh: uang, puasa, bunyi">
-        </div>
-        <div class="field">
-          <label class="label" for="subjectFilter">Mapel</label>
           <select class="select" id="subjectFilter"></select>
         </div>
       </div>
 
-      <div class="panel stats">
-        <div class="stat"><strong id="topicTotal">0</strong><span class="small">Topik</span></div>
-        <div class="stat"><strong id="scoreTotal">0%</strong><span class="small">Skor</span></div>
+      <!-- Stats Section -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Progres Belajar</div>
+        <div class="stats">
+          <div class="stat">
+            <strong id="topicTotal">0</strong>
+            <span>Topik</span>
+          </div>
+          <div class="stat">
+            <strong id="scoreTotal">0%</strong>
+            <span>Skor</span>
+          </div>
+        </div>
       </div>
 
-      <div class="panel auth-row">
-        <div class="label">Akun siswa</div>
+      <!-- Authentication Section -->
+      <div class="auth-row">
+        <div class="label">Akun Siswa</div>
         <div class="user-chip" id="userChip">
           <div class="avatar" id="userAvatar">?</div>
-          <div>
-            <div id="userName" style="font-weight:900">Belum login</div>
-            <div class="small" id="userEmail">Login Google untuk lanjut di perangkat lain.</div>
+          <div class="user-info">
+            <div class="user-name" id="userName">Belum login</div>
+            <div class="user-email" id="userEmail">Login Google untuk sinkronisasi</div>
           </div>
         </div>
         <button class="btn" id="loginBtn">Login Google</button>
-        <button class="btn secondary" id="logoutBtn" style="display:none">Logout</button>
-        <div class="sync-status" id="syncStatus">Firebase belum dikonfigurasi.</div>
+        <button class="btn secondary" id="logoutBtn">Logout</button>
+        <div class="sync-status" id="syncStatus">Firebase belum dikonfigurasi</div>
       </div>
 
-      <div class="panel collapsible-panel">
-        <button class="panel-toggle" id="quickToggle" aria-expanded="false">
-          <span>
-            <span class="label">Pilih cepat</span><br>
-            <span class="small">Mapel dan topik</span>
-          </span>
-          <span class="toggle-icon" id="quickToggleIcon">+</span>
-        </button>
-        <div class="quick-panel-body" id="quickPanel">
-          <div class="subject-list" id="subjectList"></div>
-        </div>
+      <!-- Topics Section -->
+      <div class="sidebar-section" style="border-bottom: none; flex: 1;">
+        <div class="sidebar-section-title">Daftar Topik</div>
+        <div class="subject-list" id="subjectList"></div>
       </div>
     </aside>
 
@@ -835,15 +1001,47 @@
         subject: "Bahasa",
         title: "Materi Bahasa",
         source: "Bahasa/Materi Bahasa.pdf",
-        points: ["Mengenal kosakata benda dan kegiatan sehari-hari.", "Menyusun kalimat sederhana dengan huruf kapital dan tanda titik.", "Menceritakan pengalaman dengan runtut."],
-        questions: [
-          ["Kalimat yang benar adalah ...", ["Ani membaca buku.", "ani membaca buku", "Ani membaca buku"], 0, "Kalimat diawali huruf kapital dan diakhiri tanda titik."],
-          ["Kata yang termasuk benda adalah ...", ["Berlari", "Pensil", "Cepat"], 1, "Pensil adalah nama benda."],
-          ["Saat bercerita, kita memakai suara yang ...", ["jelas", "marah", "sangat pelan"], 0, "Suara jelas membantu teman memahami cerita."],
-          ["Tanda baca di akhir kalimat berita adalah ...", ["koma", "titik", "tanya"], 1, "Kalimat berita diakhiri tanda titik."],
-          ["Kalimat tanya biasanya diawali kata ...", ["apa", "meja", "hijau"], 0, "Apa dapat digunakan untuk bertanya."]
+        points: [
+          "Mendeskripsikan benda di sekitar dengan nama, warna, bentuk, ukuran, dan fungsi.",
+          "Menulis kosakata benda di sekitar dengan ejaan yang benar.",
+          "Menulis kalimat sederhana, target bulan Ramadhan, cerita pengalaman berbagi, dan percakapan jual beli."
         ],
-        worksheet: ["Tuliskan 5 nama benda di kelas.", "Buat 3 kalimat sederhana tentang rumah.", "Ceritakan pengalaman berbagi dengan teman."]
+        questions: [
+          ["Mendeskripsikan benda berarti ...", ["menjelaskan benda", "menghitung benda", "menyembunyikan benda"], 0, "Mendeskripsikan adalah menjelaskan suatu benda."],
+          ["Saat mendeskripsikan benda, kita dapat menyebutkan ...", ["warna benda", "nama teman", "hari libur"], 0, "Deskripsi benda dapat berisi nama, warna, bentuk, ukuran, dan fungsi benda."],
+          ["Pensil digunakan untuk ...", ["menulis dan menggambar", "minum air", "membawa buku"], 0, "Pensil digunakan untuk menulis dan menggambar."],
+          ["Gelas digunakan untuk ...", ["minum air", "menulis", "membaca"], 0, "Gelas digunakan untuk minum air."],
+          ["Gelas berbentuk ...", ["tabung", "segitiga", "bola"], 0, "Pada contoh materi, gelas berbentuk tabung."],
+          ["Kosakata adalah ...", ["kumpulan kata yang kita ketahui dan gunakan", "kumpulan angka", "gambar benda"], 0, "Kosakata adalah kumpulan kata yang kita ketahui dan gunakan sehari-hari."],
+          ["Contoh kosakata benda di kelas adalah ...", ["meja", "berlari", "cepat"], 0, "Meja adalah kosakata benda di kelas."],
+          ["Ejaan m-e-j-a menjadi kata ...", ["meja", "tas", "buku"], 0, "m-e-j-a dibaca meja."],
+          ["Ejaan t-a-s menjadi kata ...", ["tas", "buku", "pensil"], 0, "t-a-s dibaca tas."],
+          ["Kalimat sederhana adalah kalimat ...", ["pendek dan mudah dipahami", "panjang sekali", "tanpa makna"], 0, "Kalimat sederhana adalah kalimat pendek yang mudah dipahami."],
+          ["Kalimat sederhana diawali dengan ...", ["huruf kapital", "tanda titik", "huruf kecil saja"], 0, "Cara menulis kalimat: awali dengan huruf kapital."],
+          ["Kalimat sederhana diakhiri dengan ...", ["tanda titik", "tanda koma", "spasi"], 0, "Kalimat sederhana diakhiri dengan tanda titik."],
+          ["Contoh kalimat sederhana yang benar adalah ...", ["Buku itu tebal.", "buku itu tebal", "Buku itu tebal"], 0, "Kalimat benar diawali huruf kapital dan diakhiri tanda titik."],
+          ["Tas digunakan untuk ...", ["membawa buku", "minum air", "menggambar"], 0, "Pada contoh materi, tas digunakan untuk membawa buku."],
+          ["Ramadhan adalah bulan suci bagi umat ...", ["Islam", "penjual", "pembeli"], 0, "Ramadhan adalah bulan suci bagi umat Islam."],
+          ["Di bulan Ramadhan kita belajar untuk ...", ["berpuasa, beribadah, dan berbuat kebaikan", "bermain tanpa aturan", "membeli semua barang"], 0, "Di bulan Ramadhan kita belajar berpuasa, beribadah, dan berbuat kebaikan."],
+          ["Contoh target kebaikan Ramadhan adalah ...", ["Saya ingin rajin salat.", "Saya ingin merusak mainan.", "Saya ingin bertengkar."], 0, "Saya ingin rajin salat adalah contoh target bulan Ramadhan."],
+          ["Berbagi adalah memberikan bantuan atau sesuatu kepada orang lain dengan ...", ["senang hati", "marah", "terpaksa mengejek"], 0, "Berbagi dilakukan dengan senang hati."],
+          ["Contoh kegiatan berbagi adalah ...", ["berbagi makanan", "merebut mainan", "mendorong teman"], 0, "Berbagi makanan adalah contoh berbagi."],
+          ["Dalam pengalaman berbagi, perasaan yang baik adalah ...", ["senang karena membantu orang lain", "marah karena membantu", "sedih karena mengejek"], 0, "Pada contoh materi, anak merasa senang karena bisa membantu orang lain."],
+          ["Jual beli adalah kegiatan penjual menawarkan barang dan pembeli ...", ["membeli barang", "membuang barang", "menyembunyikan barang"], 0, "Jual beli adalah kegiatan penjual menawarkan barang, pembeli membeli barang."],
+          ["Kata sopan dalam jual beli adalah ...", ["tolong", "dorong", "ambil paksa"], 0, "Tolong adalah kata sopan dalam jual beli."],
+          ["Saat ingin membeli pensil, pembeli dapat berkata ...", ["Permisi, saya mau membeli pensil.", "Saya tidak mau sopan.", "Buang pensilnya."], 0, "Kalimat itu sesuai contoh percakapan jual beli."],
+          ["Untuk menanyakan harga, pembeli berkata ...", ["Berapa harganya?", "Apa warna langit?", "Di mana buku saya?"], 0, "Berapa harganya? adalah kata sopan dalam jual beli."]
+        ],
+        worksheet: [
+          "Deskripsikan sebuah pensil dengan menyebutkan warna, bentuk, ukuran, dan fungsinya.",
+          "Deskripsikan sebuah gelas dengan menyebutkan bentuk dan fungsinya.",
+          "Tuliskan 5 kosakata benda di kelas.",
+          "Tuliskan ejaan dari kata meja, tas, buku, pensil, dan papan tulis.",
+          "Buat 3 kalimat sederhana tentang benda di sekitar.",
+          "Tuliskan 3 target kebaikan di bulan Ramadhan.",
+          "Ceritakan pengalaman berbagi yang pernah kamu lakukan.",
+          "Buat percakapan sederhana antara pembeli dan penjual saat membeli pensil."
+        ]
       },
       {
         subject: "Math",
@@ -931,17 +1129,106 @@
       },
       {
         subject: "Religi",
-        title: "Review Religi",
-        source: "Religi/REVIEW RELIGI.pptx",
-        points: ["Mengulang adab baik sehari-hari.", "Mengenal ibadah dan doa sederhana.", "Meneladani sikap jujur, peduli, dan bersyukur."],
-        questions: [
-          ["Sebelum makan kita membaca ...", ["doa", "teriakan", "cerita"], 0, "Membaca doa sebelum makan adalah adab baik."],
-          ["Sikap yang disukai Allah adalah ...", ["jujur", "berbohong", "mengejek"], 0, "Jujur adalah perilaku terpuji."],
-          ["Saat bertemu teman, kita dapat mengucapkan ...", ["salam", "marah", "diam terus"], 0, "Salam adalah ucapan baik."],
-          ["Bersyukur berarti ...", ["berterima kasih kepada Allah", "mengeluh terus", "membuang makanan"], 0, "Bersyukur adalah berterima kasih."],
-          ["Menjaga ciptaan Allah dapat dilakukan dengan ...", ["merawat lingkungan", "membuang sampah sembarangan", "merusak tanaman"], 0, "Merawat lingkungan adalah sikap baik."]
+        title: "PAI Semester 2 - 10 Materi",
+        source: "PAI/Materi 1-10",
+        points: [
+          "Mengenal dan menerima Islam sebagai aqidah.",
+          "Mengetahui Asma ul husna (Ar-Rahman, Ar-Rahim, Al-Malik).",
+          "Mengetahui tata cara pelaksanaan sholat dengan bacaannya.",
+          "Tadabur QS Al-Baqarah 183-185 tentang puasa.",
+          "Mengetahui hal yang membatalkan puasa.",
+          "Tadabur QS Al-Baqarah ayat 30 (manusia sebagai penjaga bumi).",
+          "Mengenal Al-Quran dan cerita diturunkannya wahyu pertama.",
+          "Mengetahui Sahabat Nabi (Khulafaur Rasyidin).",
+          "Membiasakan berperilaku santun saat bertemu orang yang lebih tua.",
+          "Mengetahui kisah Nabi Daud AS."
         ],
-        worksheet: ["Tuliskan 3 adab sebelum makan.", "Sebutkan contoh perilaku jujur.", "Gambar kegiatan menjaga ciptaan Allah."]
+        questions: [
+          // Materi 1: Mengenal dan menerima Islam sebagai aqidah
+          ["Siapakah tuhanmu?", ["Allah", "Malaikat", "Nabi"], 0, "Tuhanku adalah Allah."],
+          ["Apakah agamamu?", ["Islam", "Kristen", "Hindu"], 0, "Agamaku Islam."],
+          ["Siapakah nabimu?", ["Nabi Isa", "Nabi Muhammad", "Nabi Musa"], 1, "Nabiku Nabi Muhammad SAW."],
+          ["Apakah kitabmu?", ["Zabur", "Taurat", "Al-Quran"], 2, "Kitabku Al-Quran."],
+
+          // Materi 2: Asma ul husna
+          ["Ar-Rahman artinya...", ["Maha Pengasih", "Maha Penyayang", "Raja Segala Raja"], 0, "Ar-Rahman artinya Maha Pengasih."],
+          ["Contoh Ar-Rahman adalah...", ["Allah memberi matahari, udara, air", "Membaca Al-Quran", "Memiliki bumi dan langit"], 0, "Allah memberi matahari, udara, air dan lainnya sebagai wujud Ar-Rahman."],
+          ["Perilaku meneladani Ar-Rahman adalah...", ["Memberi makan hewan kelaparan", "Menjenguk orang sakit", "Rendah hati"], 0, "Memberi makan pada hewan yang kelaparan meneladani Ar-Rahman."],
+          ["Ar-Rahim artinya...", ["Maha Pengasih", "Maha Penyayang", "Raja Segala Raja"], 1, "Ar-Rahim artinya Maha Penyayang."],
+          ["Contoh Ar-Rahim adalah...", ["Mendapat kebahagiaan saat membaca Al-Quran", "Allah memberi matahari", "Memiliki bumi"], 0, "Mendapat kebahagiaan saat membaca Al-Quran adalah contoh Ar-Rahim."],
+          ["Perilaku meneladani Ar-Rahim adalah...", ["Menjenguk orang sakit", "Memberi makan hewan", "Rendah hati"], 0, "Menjenguk orang yang sakit dan menyayangi orang tua meneladani Ar-Rahim."],
+          ["Al-Malik artinya...", ["Maha Pengasih", "Maha Penyayang", "Raja dari segala raja"], 2, "Al-Malik artinya Raja dari segala raja."],
+          ["Contoh Al-Malik adalah...", ["Allah memberi matahari", "Membaca Al-Quran", "Allah mengatur matahari terbit dan terbenam"], 2, "Allah yang mengatur matahari terbit dan terbenam, memiliki bumi dan langit adalah contoh Al-Malik."],
+          ["Perilaku meneladani Al-Malik adalah...", ["Memberi makan hewan", "Rendah hati tidak sombong", "Menjenguk orang sakit"], 1, "Rendah hati tidak sombong terhadap apa yang dimiliki meneladani Al-Malik."],
+
+          // Materi 3: Tata cara sholat
+          ["Sholat Subuh memiliki jumlah rakaat...", ["2 rakaat", "4 rakaat", "3 rakaat"], 0, "Sholat Subuh memiliki 2 rakaat."],
+          ["Sholat Dzuhur memiliki jumlah rakaat...", ["2 rakaat", "4 rakaat", "3 rakaat"], 1, "Sholat Dzuhur memiliki 4 rakaat."],
+          ["Sholat Ashar memiliki jumlah rakaat...", ["2 rakaat", "4 rakaat", "3 rakaat"], 1, "Sholat Ashar memiliki 4 rakaat."],
+          ["Sholat Maghrib memiliki jumlah rakaat...", ["2 rakaat", "3 rakaat", "4 rakaat"], 1, "Sholat Maghrib memiliki 3 rakaat."],
+          ["Sholat Isya memiliki jumlah rakaat...", ["2 rakaat", "3 rakaat", "4 rakaat"], 2, "Sholat Isya memiliki 4 rakaat."],
+          ["Bacaan doa ruku adalah...", ["Subhana Rabbiyal Adzim", "Sami'allahu Liman Hamidah", "Subhana Rabbiyal A'la"], 0, "Bacaan Subhana Rabbiyal Adzim dibaca saat ruku."],
+          ["Bacaan i'tidal adalah...", ["Subhana Rabbiyal Adzim", "Sami'allahu Liman Hamidah", "Subhana Rabbiyal A'la"], 1, "Bacaan Sami'allahu Liman Hamidah dibaca saat bangkit dari ruku."],
+          ["Bacaan sujud adalah...", ["Subhana Rabbiyal Adzim", "Sami'allahu Liman Hamidah", "Subhana Rabbiyal A'la"], 2, "Bacaan Subhana Rabbiyal A'la dibaca saat sujud."],
+
+          // Materi 4: Tadabur QS Al-Baqarah 183-185
+          ["Puasa Ramadhan hukumnya adalah...", ["Sunat", "Wajib", "Makruh"], 1, "Puasa Ramadhan adalah puasa yang dihukumi wajib."],
+          ["Dengan puasa kita dapat merasakan...", ["Kenyang", "Apa yang dirasakan orang miskin", "Kekayaan"], 1, "Dengan puasa kita dapat merasakan apa yang dirasakan oleh orang miskin."],
+          ["Puasa dapat...", ["Menyehatkan", "Menyakitkan", "Tidak berpengaruh"], 0, "Puasa dapat menyehatkan."],
+          ["Orang yang diberi keringanan tidak berpuasa adalah...", ["Orang kaya", "Musafir dan sakit", "Anak-anak"], 1, "Diberi keringanan bagi orang yang safar dan sakit untuk tidak berpuasa."],
+          ["Jarak minimal musafir untuk tidak berpuasa adalah...", ["50 km", "80 km", "100 km"], 1, "Minimal jarak 80 km untuk musafir yang tidak berpuasa."],
+          ["Al-Quran diturunkan pada malam...", ["17 Ramadhan", "27 Ramadhan", "1 Ramadhan"], 0, "Al-Quran diturunkan pada malam 17 Ramadhan."],
+
+          // Materi 5: Hal yang membatalkan puasa
+          ["Hal yang membatalkan puasa adalah...", ["Makan dan minum sengaja", "Tidur", "Bekerja"], 0, "Makan dan minum disengaja membatalkan puasa."],
+          ["Keluar darah haid bagi perempuan akan...", ["Membatalkan puasa", "Tidak membatalkan puasa", "Menghapus puasa"], 0, "Keluar darah haid khusus untuk perempuan membatalkan puasa."],
+          ["Hilang akal (gila) akan...", ["Membatalkan puasa", "Tidak membatalkan puasa", "Menambah pahala"], 0, "Hilang akal (gila) membatalkan puasa."],
+          ["Murtad (keluar dari agama Islam) akan...", ["Membatalkan puasa", "Tidak membatalkan puasa", "Menghapus semua amal"], 0, "Murtad membatalkan puasa."],
+
+          // Materi 6: Tadabur QS Al-Baqarah ayat 30
+          ["Manusia diciptakan untuk menjadi...", ["Pemimpin", "Pengikut", "Penjaga"], 0, "Penciptaan manusia untuk menjadi pemimpin yang baik."],
+          ["Pemimpin yang buruk akan berpengaruh pada...", ["Tindakannya", "Penampilannya", "Namanya"], 0, "Pemimpin yang buruk akan berpengaruh pada tindakannya."],
+          ["Menjaga bumi dilakukan dengan...", ["Buang sampah pada tempatnya", "Buang sampah sembarangan", "Membakar sampah"], 0, "Buang sampah pada tempatnya adalah menjaga bumi."],
+          ["Memakai air secara...", ["Secukupnya", "Boros", "Berlebihan"], 0, "Memakai air secukupnya menjaga bumi."],
+          ["Tindakan merusak bumi adalah...", ["Buang sampah sembarangan", "Buang sampah pada tempatnya", "Menanam pohon"], 0, "Buang sampah sembarangan adalah tindakan merusak bumi."],
+          ["Boros air adalah tindakan...", ["Menjaga bumi", "Merusak bumi", "Membantu bumi"], 1, "Boros air adalah tindakan merusak bumi."],
+
+          // Materi 7: Mengenal Al-Quran dan wahyu pertama
+          ["Al-Quran adalah kitab suci umat Islam yang berisi...", ["Perkataan manusia", "Perkataan Allah", "Perkataan malaikat"], 1, "Al-Quran adalah kitab suci yang berisi perkataan Allah."],
+          ["Al-Quran menjadi petunjuk hidup agar...", ["Bahagia dunia saja", "Bahagia dunia dan akhirat", "Bahagia akhirat saja"], 1, "Al-Quran menjadi petunjuk hidup agar menjadi manusia yang bahagia dunia dan akhirat."],
+          ["Al-Quran diturunkan di...", ["Gua Tsur", "Gua Hira", "Gua Nur"], 1, "Al-Quran diturunkan di Gua Hira."],
+          ["Al-Quran diturunkan oleh malaikat...", ["Mikail", "Jibril", "Israfil"], 1, "Al-Quran diturunkan oleh malaikat Jibril kepada Nabi Muhammad."],
+          ["Surat pertama yang diturunkan adalah...", ["Al-Fatihah", "Al-Alaq ayat 1-5", "Al-Ikhlas"], 1, "Surat pertama yang diturunkan adalah Al-Alaq ayat 1-5."],
+
+          // Materi 8: Khulafaur Rasyidin
+          ["Khulafaur Rasyidin yang pertama adalah...", ["Umar bin Khattab", "Abu Bakar Ash-Shiddiq", "Utsman bin Affan"], 1, "Abu Bakar Ash-Shiddiq adalah khulafaur rasyidin pertama."],
+          ["Khulafaur Rasyidin yang kedua adalah...", ["Abu Bakar", "Umar bin Khattab", "Utsman bin Affan"], 1, "Umar bin Khattab adalah khulafaur rasyidin kedua."],
+          ["Khulafaur Rasyidin yang ketiga adalah...", ["Umar", "Utsman bin Affan", "Ali bin Abi Thalib"], 1, "Utsman bin Affan adalah khulafaur rasyidin ketiga."],
+          ["Khulafaur Rasyidin yang keempat adalah...", ["Utsman", "Ali bin Abi Thalib", "Abu Bakar"], 1, "Ali bin Abi Thalib adalah khulafaur rasyidin keempat."],
+
+          // Materi 9: Perilaku santun
+          ["Saat bertemu orang tua, kita mengucapkan...", ["Salam", "Marah", "Diam"], 0, "Mengucapkan salam (salam, selamat pagi, sore) adalah perilaku santun."],
+          ["Mencium tangan orang yang lebih tua adalah...", ["Perilaku buruk", "Perilaku santun", "Perilaku sombong"], 1, "Mencium tangan (orang tua, guru, kakak, kakek, nenek) adalah perilaku santun."],
+          ["Saat orang tua bicara, kita harus...", ["Memotong perkataannya", "Mendengarkan perkataannya", "Pergi"], 1, "Mendengarkan perkataannya (tidak memotong) adalah perilaku santun."],
+          ["Kata-kata ajaib yang digunakan adalah...", ["Tolong, maaf, terima kasih", "Hey, elo, gue", "Kamu, kamu, kamu"], 0, "Menggunakan kata-kata ajaib (tolong, maaf, terima kasih) adalah perilaku santun."],
+          ["Sebelum pergi kita mengucapkan...", ["Marah", "Permisi", "Tidur"], 1, "Mengucapkan permisi adalah perilaku santun."],
+
+          // Materi 10: Kisah Nabi Daud
+          ["Nabi Daud dikenal sebagai...", ["Pemberani", "Penakut", "Pemarah"], 0, "Nabi Daud adalah pemberani yang memiliki batu kecil yang ajaib."]
+        ],
+        worksheet: [
+          "Tuliskan lagu 'Siapakah tuhanmu?' lengkap dengan jawabannya.",
+          "Sebutkan 3 contoh Ar-Rahman dalam kehidupan sehari-hari.",
+          "Jelaskan perilaku meneladani Ar-Rahim dengan contoh.",
+          "Tuliskan bacaan doa ruku, i'tidal, dan sujud lengkap.",
+          "Jelaskan hikmah puasa Ramadhan menurut QS Al-Baqarah 183-185.",
+          "Sebutkan 4 hal yang membatalkan puasa.",
+          "Jelaskan tanggung jawab manusia sebagai penjaga bumi.",
+          "Ceritakan singkat tentang turunnya Al-Quran pertama kali.",
+          "Sebutkan 4 Khulafaur Rasyidin beserta urutannya.",
+          "Tuliskan 5 contoh perilaku santun terhadap orang tua.",
+          "Ceritakan singkat kisah Nabi Daud AS."
+        ]
       },
       {
         subject: "Science",
@@ -1072,48 +1359,56 @@
     ];
 
     function buildExtraQuestions(topic) {
-      const baseTitle = topic.title.toLowerCase();
-      const pointA = topic.points[0] || topic.title;
-      const pointB = topic.points[1] || topic.title;
-      const pointC = topic.points[2] || topic.title;
+      const pointA = topic.points[0] || "Belajar dengan baik";
+      const pointB = topic.points[1] || "Memahami materi";
+      const pointC = topic.points[2] || "Menerapkan dalam kehidupan sehari-hari";
+
       return [
-        [`Topik "${topic.title}" paling dekat dengan kegiatan ...`, [`belajar ${baseTitle}`, "bermain tanpa aturan", "membuang barang sembarangan"], 0, `Soal ini membahas ${topic.title}.`],
-        [`Manakah contoh yang sesuai dengan materi "${topic.title}"?`, [pointA, "mengganggu teman saat belajar", "tidak memperhatikan guru"], 0, pointA],
-        [`Saat mengerjakan materi ini, sikap yang baik adalah ...`, ["teliti dan mau mencoba", "terburu-buru tanpa membaca", "menjawab asal-asalan"], 0, "Membaca teliti membantu jawaban lebih tepat."],
-        [`Apa yang perlu dilakukan sebelum menjawab soal "${topic.title}"?`, ["membaca soal dengan baik", "menutup soal", "memilih jawaban acak"], 0, "Pahami soal dahulu sebelum memilih jawaban."],
-        [`Materi ini dapat dilatih dengan cara ...`, ["mengerjakan contoh soal", "menghindari latihan", "menyalin tanpa memahami"], 0, "Latihan contoh soal membantu memahami materi."],
-        [`Pernyataan yang benar tentang materi ini adalah ...`, [pointB, "materi tidak perlu dipelajari", "semua jawaban selalu sama"], 0, pointB],
-        [`Mengapa siswa perlu memahami "${topic.title}"?`, ["agar dapat memakai pengetahuan dalam kegiatan sehari-hari", "agar tidak perlu belajar lagi", "agar bisa menebak semua soal"], 0, "Materi kelas 1 dekat dengan kegiatan sehari-hari."],
-        [`Jika belum paham materi ini, sebaiknya siswa ...`, ["bertanya dan mencoba lagi", "menyerah", "menghapus semua jawaban"], 0, "Bertanya dan mengulang latihan adalah cara belajar yang baik."],
-        [`Manakah kebiasaan belajar yang cocok untuk "${topic.title}"?`, ["mengulang soal yang salah", "melewati soal sulit terus-menerus", "tidak membaca pilihan"], 0, "Mengulang soal salah membantu memperbaiki pemahaman."],
-        [`Hal penting dari topik ini adalah ...`, [pointC, "menjawab cepat tanpa berpikir", "tidak menyelesaikan latihan"], 0, pointC]
+        ["Saat belajar, sikap yang baik adalah ...", ["teliti dan mau mencoba", "terburu-buru tanpa membaca", "menjawab asal-asalan"], 0, "Membaca teliti membantu jawaban lebih tepat."],
+        ["Apa yang perlu dilakukan sebelum menjawab soal?", ["membaca soal dengan baik", "menutup soal", "memilih jawaban acak"], 0, "Pahami soal dahulu sebelum memilih jawaban."],
+        ["Materi dapat dilatih dengan cara ...", ["mengerjakan contoh soal", "menghindari latihan", "menyalin tanpa memahami"], 0, "Latihan contoh soal membantu memahami materi."],
+        ["Pernyataan yang benar tentang belajar adalah ...", [pointB, "materi tidak perlu dipelajari", "semua jawaban selalu sama"], 0, pointB],
+        ["Mengapa siswa perlu memahami materi?", ["agar dapat memakai pengetahuan dalam kegiatan sehari-hari", "agar tidak perlu belajar lagi", "agar bisa menebak semua soal"], 0, "Materi kelas 1 dekat dengan kegiatan sehari-hari."],
+        ["Jika belum paham materi, sebaiknya siswa ...", ["bertanya dan mencoba lagi", "menyerah", "menghapus semua jawaban"], 0, "Bertanya dan mengulang latihan adalah cara belajar yang baik."],
+        ["Kebiasaan belajar yang baik adalah ...", ["mengulang soal yang salah", "melewati soal sulit terus-menerus", "tidak membaca pilihan"], 0, "Mengulang soal salah membantu memperbaiki pemahaman."],
+        ["Hal penting dari materi ini adalah ...", [pointC, "menjawab cepat tanpa berpikir", "tidak menyelesaikan latihan"], 0, pointC],
+        ["Saat menjawab soal, sebaiknya ...", ["berpikir pelan-pelan", "terburu-buru", "menebak saja"], 0, "Berpikir pelan-pelan membantu menjawab dengan tepat."],
+        ["Setelah selesai belajar, sebaiknya ...", ["mengulang materi yang sulit", "langsung tidur", "melupakan semua"], 0, "Mengulang materi sulit membantu memahami lebih baik."]
       ];
     }
 
     function buildExtraEssays(topic) {
       return [
-        `Jelaskan dengan bahasamu sendiri tentang ${topic.title}.`,
-        `Sebutkan 3 contoh yang berhubungan dengan ${topic.title}.`,
-        `Tuliskan satu pengalamanmu yang sesuai dengan ${topic.title}.`,
-        `Apa manfaat belajar ${topic.title}?`,
-        `Buat satu kalimat sederhana tentang ${topic.title}.`,
-        `Tuliskan hal yang masih sulit dari materi ${topic.title}.`,
-        `Sebutkan satu kegiatan di rumah atau sekolah yang sesuai dengan ${topic.title}.`
+        "Jelaskan cara belajar yang baik menurut pendapatmu.",
+        "Tuliskan pengalaman belajar yang menyenangkan.",
+        "Sebutkan 3 contoh kebiasaan belajar yang positif.",
+        "Apa manfaat belajar dengan teliti?",
+        "Bagaimana cara mengulang pelajaran dengan efektif?",
+        "Tuliskan hal yang masih sulit dan bagaimana mengatasinya.",
+        "Sebutkan kegiatan di rumah yang dapat membantu belajar.",
+        "Jelaskan mengapa bertanya itu penting dalam belajar.",
+        "Bagaimana cara menjawab soal dengan baik?",
+        "Tuliskan target belajar yang ingin kamu capai."
       ];
     }
 
     TOPICS.forEach(topic => {
-      topic.questions = [...topic.questions, ...buildExtraQuestions(topic)];
-      topic.essays = [...topic.worksheet, ...buildExtraEssays(topic)];
+      // Bahasa and Religi use only curated questions from their provided materials.
+      if (topic.subject === "Bahasa" || topic.subject === "Religi") {
+        topic.essays = topic.worksheet; // Only use worksheet questions from PDF
+      } else {
+        topic.questions = [...topic.questions, ...buildExtraQuestions(topic)];
+        topic.essays = [...topic.worksheet, ...buildExtraEssays(topic)];
+      }
     });
 
     const FIREBASE_CONFIG = {
-      apiKey: "ISI_API_KEY_FIREBASE",
-      authDomain: "ISI_PROJECT_ID.firebaseapp.com",
-      projectId: "ISI_PROJECT_ID",
-      storageBucket: "ISI_PROJECT_ID.firebasestorage.app",
-      messagingSenderId: "ISI_MESSAGING_SENDER_ID",
-      appId: "ISI_APP_ID"
+      apiKey: "AIzaSyBh4NvwCIPK5o4QqmslPp-KHw4Ekv9EJSY",
+      authDomain: "latihan-jawara.firebaseapp.com",
+      projectId: "latihan-jawara",
+      storageBucket: "latihan-jawara.firebasestorage.app",
+      messagingSenderId: "1044077137623",
+      appId: "1:1044077137623:web:a467c66a9ff2f653336a92"
     };
 
     const firebaseState = {
@@ -1126,7 +1421,7 @@
     };
 
     const state = {
-      selected: 0,
+      selected: null,
       tab: "quiz",
       q: 0,
       answered: false,
@@ -1136,7 +1431,6 @@
       scores: JSON.parse(localStorage.getItem("jawaraScores") || "{}"),
       answers: JSON.parse(localStorage.getItem("jawaraAnswers") || "{}"),
       essays: JSON.parse(localStorage.getItem("jawaraEssays") || "{}"),
-      quickOpen: false,
       expandedSubjects: {},
       sidebarHidden: false,
       pendingTopic: null,
@@ -1149,9 +1443,6 @@
       search: document.querySelector("#search"),
       subjectFilter: document.querySelector("#subjectFilter"),
       subjectList: document.querySelector("#subjectList"),
-      quickToggle: document.querySelector("#quickToggle"),
-      quickToggleIcon: document.querySelector("#quickToggleIcon"),
-      quickPanel: document.querySelector("#quickPanel"),
       sideToggle: document.querySelector("#sideToggle"),
       topicTotal: document.querySelector("#topicTotal"),
       scoreTotal: document.querySelector("#scoreTotal"),
@@ -1180,34 +1471,17 @@
       return TOPICS[index].subject + "::" + TOPICS[index].title;
     }
 
-    function shuffledIndexes(length) {
-      const indexes = Array.from({ length }, (_, index) => index);
-      for (let i = indexes.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [indexes[i], indexes[j]] = [indexes[j], indexes[i]];
-      }
-      return indexes;
+    function sequentialIndexes(length) {
+      return Array.from({ length }, (_, index) => index);
     }
 
     function ensureOrder(mode, index = state.selected) {
       const key = topicKey(index);
       const source = mode === "essay" ? TOPICS[index].essays : TOPICS[index].questions;
       if (!state.orders[mode][key] || state.orders[mode][key].length !== source.length) {
-        state.orders[mode][key] = shuffledIndexes(source.length);
+        state.orders[mode][key] = sequentialIndexes(source.length);
       }
       return state.orders[mode][key];
-    }
-
-    function reshuffleTopic(index) {
-      const key = topicKey(index);
-      state.orders.quiz[key] = shuffledIndexes(TOPICS[index].questions.length);
-      state.orders.essay[key] = shuffledIndexes(TOPICS[index].essays.length);
-    }
-
-    function reshuffleCategory(subject) {
-      TOPICS.forEach((topic, index) => {
-        if (subject === "Semua" || topic.subject === subject) reshuffleTopic(index);
-      });
     }
 
     function getScore(index) {
@@ -1284,6 +1558,7 @@
         const snap = await getDoc(doc(firebaseState.db, "studentProgress", studentDocId()));
         if (!snap.exists()) {
           await saveCloudProgress();
+          setSyncStatus("Data siswa baru dibuat. Selamat belajar!");
           return;
         }
         const data = snap.data();
@@ -1296,18 +1571,22 @@
         localStorage.setItem("jawaraName", state.name);
         persistPracticeState();
         render();
-        setSyncStatus("Data siswa dimuat dari Firebase.");
+        setSyncStatus("Data siswa dimuat dari Firebase. Sinkronisasi aktif.");
       } catch (error) {
+        console.error("Firebase load error:", error);
         setSyncStatus("Gagal memuat Firebase. Memakai data lokal.");
       }
     }
 
     function renderAuth() {
+      const studentNamePanel = document.querySelector("#studentNamePanel");
+
       if (!firebaseState.configured) {
         els.loginBtn.disabled = true;
         els.loginBtn.textContent = "Login Google";
         els.logoutBtn.style.display = "none";
         els.userChip.classList.remove("show");
+        if (studentNamePanel) studentNamePanel.style.display = "none";
         setSyncStatus("Isi FIREBASE_CONFIG untuk mengaktifkan login Google.");
         return;
       }
@@ -1317,14 +1596,26 @@
       els.loginBtn.style.display = user ? "none" : "block";
       els.logoutBtn.style.display = user ? "block" : "none";
       els.userChip.classList.toggle("show", !!user);
+
+      // Show/hide student name panel based on login status
+      if (studentNamePanel) {
+        studentNamePanel.style.display = user ? "block" : "none";
+      }
+
       if (!user) {
-        setSyncStatus(firebaseState.ready ? "Login Google untuk memuat jawaban siswa." : "Menyiapkan Firebase...");
+        if (studentNamePanel) studentNamePanel.style.display = "none";
+        setSyncStatus(firebaseState.ready ? "Logout berhasil. Data tetap tersimpan di perangkat ini. Login kembali untuk sinkronisasi." : "Menyiapkan Firebase...");
         return;
       }
 
       els.userName.textContent = state.name || user.displayName || "Siswa";
       els.userEmail.textContent = user.email || "";
       els.userAvatar.innerHTML = user.photoURL ? `<img src="${user.photoURL}" alt="">` : (user.displayName || user.email || "?").slice(0, 1).toUpperCase();
+
+      // Make sure student name is loaded and visible when logged in
+      if (state.name) {
+        els.studentName.value = state.name;
+      }
     }
 
     async function initFirebase() {
@@ -1351,7 +1642,12 @@
             localStorage.setItem("jawaraName", state.name);
             renderAuth();
             setSyncStatus("Memuat data siswa dari Firebase...");
-            await loadCloudProgress();
+            try {
+              await loadCloudProgress();
+            } catch (error) {
+              console.error("Auth state change error:", error);
+              setSyncStatus("Gagal memuat data dari Firebase. Data lokal tetap aktif.");
+            }
           } else {
             renderAuth();
           }
@@ -1375,14 +1671,44 @@
     }
 
     async function logoutGoogle() {
-      if (!firebaseState.ready) return;
+      if (!firebaseState.ready) {
+        console.error("Firebase not ready for logout");
+        setSyncStatus("Firebase belum siap. Tunggu sebentar...");
+        return;
+      }
+
       try {
-        await saveCloudProgress();
-        await firebaseState.authApi.signOut(firebaseState.auth);
+        console.log("Starting logout process...");
+        setSyncStatus("Menyimpan data sebelum logout...");
+
+        // Save to Firebase before logging out with timeout
+        const savePromise = saveCloudProgress();
+        await Promise.race([savePromise, new Promise(resolve => setTimeout(resolve, 3000))]);
+        console.log("Data saved (or timed out). Signing out...");
+
+        setSyncStatus("Logout dari Firebase...");
+
+        // Sign out from Firebase with timeout protection
+        const signOutPromise = firebaseState.authApi.signOut(firebaseState.auth);
+        await Promise.race([signOutPromise, new Promise(resolve => setTimeout(resolve, 5000))]);
+
+        console.log("Sign out complete (or timed out)");
+        // Clear Firebase user state regardless of signOut success
+        firebaseState.user = null;
+
+        // Note: We keep local state.name, state.scores, state.answers, state.essays
+        // so the user can continue practicing offline
+        // They will be saved again on next login
+
+        // Update UI
+        renderAuth();
+        setSyncStatus("Logout berhasil. Data tetap tersimpan di perangkat ini.");
+      } catch (error) {
+        console.error("Logout error:", error);
+        // Even if there's an error, clear the user state and update UI
         firebaseState.user = null;
         renderAuth();
-      } catch (error) {
-        setSyncStatus("Logout gagal. Coba lagi.");
+        setSyncStatus("Logout selesai (dengan peringatan). Data lokal tetap aman.");
       }
     }
 
@@ -1459,14 +1785,33 @@
 
     function renderChrome() {
       els.app.classList.toggle("sidebar-hidden", state.sidebarHidden);
-      els.quickPanel.classList.toggle("show", state.quickOpen);
-      els.quickToggle.setAttribute("aria-expanded", String(state.quickOpen));
-      els.quickToggleIcon.textContent = state.quickOpen ? "-" : "+";
       els.sideToggle.textContent = state.sidebarHidden ? ">" : "<";
       els.sideToggle.setAttribute("aria-label", state.sidebarHidden ? "Tampilkan menu" : "Sembunyikan menu");
     }
 
     function renderMaterial() {
+      if (state.selected === null) {
+        els.materialCard.innerHTML = `
+          <div class="card-head">
+            <h3 class="topic-title">Selamat Datang di Latihan JAWARA Semester 2! 🎓</h3>
+            <p class="small">Pilih topik di menu samping untuk memulai latihan.</p>
+          </div>
+          <div class="card-body">
+            <div class="points" style="margin-top: 20px;">
+              <h4>📚 Cara Menggunakan:</h4>
+              <ol style="margin-left: 20px; line-height: 1.8;">
+                <li>Pilih topik dari daftar di menu samping</li>
+                <li>Kerjakan soal pilihan ganda</li>
+                <li>Jawab soal esai</li>
+                <li>Skor akan tersimpan otomatis</li>
+                <li>Login dengan Google untuk menyimpan progres di Firebase</li>
+              </ol>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
       const topic = TOPICS[state.selected];
       const score = getScore(state.selected);
       const pct = score.total ? Math.round((score.correct / score.total) * 100) : 0;
@@ -1502,7 +1847,7 @@
       els.practiceCard.innerHTML = `
         <div class="question-box">
           <div class="mode-note">
-            <div class="question-count">${order.length} soal pilihan ganda - urutan acak</div>
+            <div class="question-count">${order.length} soal pilihan ganda</div>
             <div class="small">Jawaban yang sudah dipilih akan tetap terlihat.</div>
           </div>
           <div class="question-list">
@@ -1545,7 +1890,7 @@
       els.practiceCard.innerHTML = `
         <div class="question-box">
           <div class="mode-note">
-            <div class="question-count">${order.length} soal esai - urutan acak</div>
+            <div class="question-count">${order.length} soal esai</div>
             <div class="small">Jawaban tersimpan otomatis.</div>
           </div>
           <div class="question-list">
@@ -1585,6 +1930,17 @@
     }
 
     function renderPractice() {
+      if (state.selected === null) {
+        els.practiceCard.innerHTML = `
+          <div class="card-body" style="text-align: center; padding: 60px 20px;">
+            <div style="font-size: 64px; margin-bottom: 20px;">📚</div>
+            <h3 style="color: var(--ink); margin-bottom: 10px;">Pilih Topik untuk Memulai</h3>
+            <p style="color: var(--muted);">Klik salah satu topik di menu samping untuk mulai latihan.</p>
+          </div>
+        `;
+        return;
+      }
+
       document.querySelectorAll(".tab").forEach(tab => tab.classList.toggle("active", tab.dataset.tab === state.tab));
       if (state.tab === "quiz") renderQuiz();
       if (state.tab === "essay") renderEssay();
@@ -1604,7 +1960,6 @@
       state.filter = TOPICS[index].subject;
       state.q = 0;
       state.answered = false;
-      reshuffleTopic(index);
       render();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -1612,7 +1967,7 @@
     function requestTopicChange(index) {
       if (index === state.selected) return;
       state.pendingTopic = index;
-      els.confirmText.textContent = `Pindah ke topik "${TOPICS[index].title}"? Urutan soal akan diacak ulang.`;
+      els.confirmText.textContent = `Pindah ke topik "${TOPICS[index].title}"?`;
       els.confirmModal.classList.add("show");
     }
 
@@ -1686,15 +2041,9 @@
     });
 
     els.subjectFilter.addEventListener("change", event => {
-      state.quickOpen = true;
       state.expandedSubjects[event.target.value] = true;
       state.filter = event.target.value;
       renderFilters();
-      renderChrome();
-    });
-
-    els.quickToggle.addEventListener("click", () => {
-      state.quickOpen = !state.quickOpen;
       renderChrome();
     });
 
